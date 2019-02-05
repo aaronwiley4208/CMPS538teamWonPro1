@@ -17,7 +17,7 @@ public class CamController : MonoBehaviour {
 	public float ySpeed = 2f;
 	float xRotate;
 	float yRotate;
-
+	float orbitD = 5f;
 
 	// Use this for initialization
 	void Start () {
@@ -29,8 +29,11 @@ public class CamController : MonoBehaviour {
 	}
 		
 	void LateUpdate () {
-		MoveToTarget ();
-		LookAtTarget ();
+		//MoveToTarget ();
+		//LookAtTarget ();
+
+			OrbitLook();
+		
 	}
 
 	void MoveToTarget(){
@@ -52,5 +55,19 @@ public class CamController : MonoBehaviour {
 			transform.eulerAngles = new Vector3 (yRotate, xRotate, 0);
 		}
 
+	}
+
+	void OrbitLook(){
+		xRotate += Input.GetAxis("Mouse X");
+		yRotate += Input.GetAxis("Mouse Y");
+		Vector3 direction = new Vector3 (0,0, -orbitD);
+		Quaternion rotation = Quaternion.Euler (yRotate, xRotate, 0);
+		if (Input.GetMouseButton (1)) {
+			transform.position = target.position + rotation * direction;
+			transform.LookAt (target.position);
+		}
+		if (Input.GetAxis ("Mouse ScrollWheel") != 0) {
+			orbitD += Input.GetAxis ("Mouse ScrollWheel") * zoomSpeed;
+		}
 	}
 }
