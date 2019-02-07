@@ -57,9 +57,10 @@ public class MovingPlatformScript : MonoBehaviour {
     void Start () {
 
         //pull waypoints from existing visualizers
+        
         for(int i = 0; i<waypointVisuals.Count; i++)
         {
-            waypoints[i] = waypointVisuals[i].transform.position;
+            waypoints.Add(waypointVisuals[i].transform.position);
         }
 
         //given an invalid list, remove this bad platform
