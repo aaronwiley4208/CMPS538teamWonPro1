@@ -38,11 +38,13 @@ public class MovingPlatformScript : MonoBehaviour {
     //
     //to make it go fast, shorten time between or lengthen distance between nodes
     //to make it go slow, increase time between or add intermediate nodes between corners/turns
-    private double timeBetween = 5.0;
+    private float timeBetween = 5.0f;
     //keeps track of time since starting to lerp from previous node
-    private double timeStarted;
+    private float timeStarted;
     //keeps track of how long it's been since lerping started
-    private double currentTime;
+    private float currentTime;
+    //float used to ease variable passing
+    private float percent;
 
     //float to keep track of when to untoggle isWaiting
     //default -1 to prevent oddness in starting checks
@@ -480,11 +482,21 @@ public class MovingPlatformScript : MonoBehaviour {
                 break;
         }
 
+        //lerp code
 
+        //set currentTime to be time elapsed since timeStarte
+        currentTime = Time.time - timeStarted;
+        //make percent be a nice variable instead of math
+        percent = currentTime / timeBetween;
+        //clamp percent at 1 (100%)
+        if (percent > 1)
+        {
+            percent = 1;
+        }
 
+        //do lerp
+        gameObject.transform.position = Vector3.Lerp(waypoints[lastIndex], waypoints[nextIndex], percent);
 
-
-		//TODO: lerping <--
         //TODO: player dragging
             //this might need to be done on a separate update portion due to waiting
             //but then again, there's no movement while waiting...
