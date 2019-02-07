@@ -54,6 +54,17 @@ public class Pellet : MonoBehaviour {
         }
     }
 
+    // Now check for non-trigger collisions, in case we go with non-passable ones
+    void OnCollisionEnter(Collision collision) {
+        if (collision.gameObject.tag == "PacMan") {
+            PacManSize pacSize = collision.gameObject.GetComponent<PacManSize>();
+            if (pacSize.currentSize >= size) {
+                pacSize.Chomp(size);
+                Destroy(gameObject);
+            }
+        }    
+    }
+
     IEnumerator FadeOut() {
         float step = occludedAlpha / (fadeTime / fadeInterval);
         while (currentAlpha > occludedAlpha) {
