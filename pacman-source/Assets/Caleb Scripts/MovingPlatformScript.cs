@@ -38,7 +38,7 @@ public class MovingPlatformScript : MonoBehaviour {
     //
     //to make it go fast, shorten time between or lengthen distance between nodes
     //to make it go slow, increase time between or add intermediate nodes between corners/turns
-    private float timeBetween = 5.0f;
+    public float timeBetween = 5.0f;
     //keeps track of time since starting to lerp from previous node
     private float timeStarted;
     //keeps track of how long it's been since lerping started
@@ -275,16 +275,6 @@ public class MovingPlatformScript : MonoBehaviour {
                 }
                 //regardless, the platform can continue to lerp
                 //even if it has just reached its destination (constant movement yo)
-
-                //todo
-                    //if so, do endpoint check and set direction, next node, time bits
-                //step 2: do lerp
-
-                //wait, if this lerps the same no matter what, doesn't that mean the lerp
-                //code is shared between all cases and the cases only need to handle the
-                //"reached the waypoint" code? i think so
-
-
                 break;
             case Mode.cycle:
                 //step 1: am i at my destination node?
