@@ -17,7 +17,7 @@ public class MovingPlatformScript : MonoBehaviour {
     public Mode currentMode = 0;
 
     //time to wait, either at endpoints or waypoints if using applicable Mode
-    public double waitTime = 5.0;
+    public float waitTime = 5.0f;
 
     //vectors used in LERP calculations
     private Vector3 lastPos;
@@ -29,7 +29,26 @@ public class MovingPlatformScript : MonoBehaviour {
     public enum MoveType {pos, neg};
     public MoveType dir = 0;
 
+    //used in initialization to hard-set platform to closest node
     private double shortestDist;
+
+    //how long the platform should spend between nodes
+    //and no, i doubt i'll do a speed dealio because that looks like it's
+    //framerate dependent and also a bitch to implement
+    //
+    //to make it go fast, shorten time between or lengthen distance between nodes
+    //to make it go slow, increase time between or add intermediate nodes between corners/turns
+    private double timeBetween = 5.0;
+    //keeps track of time since starting to lerp from previous node
+    private double timeStarted;
+    //keeps track of how long it's been since lerping started
+    private double currentTime;
+
+    //float to keep track of when to untoggle isWaiting
+    //default -1 to prevent oddness in starting checks
+    private float waitUntil = -1;
+    //bool to know when to bypass wait code
+    private bool isWaiting;
 
 
     // Use this for initialization
@@ -201,8 +220,273 @@ public class MovingPlatformScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		//TODO: lerping
-        //TOOD: waypoint reaching behavior
+
+        //alright, so i'm doing this on a per-case basis;
+        //if i have time, i'll extrapolate out common bits but no promises
+
+        switch (currentMode)
+        {
+            case Mode.bounce:
+                //step 1: am i at my destination node?
+
+                //if the platform is at its destination
+                if (gameObject.transform.position == waypoints[nextIndex])
+                {
+                    //if it's moving positively
+                    if (dir == MoveType.pos)
+                    {
+                        //and if it's at the uppermost index
+                        if (nextIndex == waypoints.Count - 1)
+                        {
+                            dir = MoveType.neg;  //it bounces back down the line
+                            lastIndex = nextIndex;  //it is coming from its current location
+                            nextIndex -= 1; //the next location is down 1
+                        }
+                        //otherwise, it is moving positively and not at its uppermost index
+                        else
+                        {
+                            lastIndex = nextIndex;  //update current location
+                            nextIndex += 1;  //update next location
+                        }
+                    }
+                    //otherwise, direction is negative
+                    else
+                    {
+                        //if it's at the lowermost index
+                        if (nextIndex == 0)
+                        {
+                            dir = MoveType.pos;  //it bounces back up the line
+                            lastIndex = nextIndex; //it's coming from the current location
+                            nextIndex += 1; //the next location is up 1
+                        }
+                        //otherwise, it is moving negatively and not at its lowermost index
+                        else
+                        {
+                            lastIndex = nextIndex;  //update current location
+                            nextIndex -= 1;  //update next location
+                        }
+                    }
+                    //always need to set the time bits if at a node
+                    timeStarted = Time.time;
+                    currentTime = 0;  //reset just in case
+                }
+                //regardless, the platform can continue to lerp
+                //even if it has just reached its destination (constant movement yo)
+
+                //todo
+                    //if so, do endpoint check and set direction, next node, time bits
+                //step 2: do lerp
+
+                //wait, if this lerps the same no matter what, doesn't that mean the lerp
+                //code is shared between all cases and the cases only need to handle the
+                //"reached the waypoint" code? i think so
+
+
+                break;
+            case Mode.cycle:
+                //step 1: am i at my destination node?
+
+                //if the platform is at its destination
+                if (gameObject.transform.position == waypoints[nextIndex])
+                {
+                    //if it's moving positively
+                    if (dir == MoveType.pos)
+                    {
+                        //and if it's at the uppermost index and needs to loop back down
+                        if (nextIndex == waypoints.Count - 1)
+                        {
+                            lastIndex = nextIndex;  //it is coming from its current location
+                            nextIndex = 0; //loop back to start
+                        }
+                        //otherwise, it is moving positively and not at its uppermost index
+                        else
+                        {
+                            lastIndex = nextIndex;  //update current location
+                            nextIndex += 1;  //update next location
+                        }
+                    }
+                    //otherwise, direction is negative
+                    else
+                    {
+                        //if it's at the lowermost index and needs to loop back to top
+                        if (nextIndex == 0)
+                        {
+                            lastIndex = nextIndex; //it's coming from the current location
+                            nextIndex = waypoints.Count - 1; //loop back to the last in the list
+                        }
+                        //otherwise, it is moving negatively and not at its lowermost index
+                        else
+                        {
+                            lastIndex = nextIndex;  //update current location
+                            nextIndex -= 1;  //update next location
+                        }
+                    }
+                    //always need to set the time bits if at a node
+                    timeStarted = Time.time;
+                    currentTime = 0;  //reset just in case
+                }
+                //shamelessly ripped from the bounce code
+                break;
+            case Mode.endWait:
+                //step 1: am i at my destination node?
+
+                //if the platform is at its destination
+                if (gameObject.transform.position == waypoints[nextIndex])
+                {
+                    //if it's moving positively
+                    if (dir == MoveType.pos)
+                    {
+                        //and if it's at the uppermost index
+                        if (nextIndex == waypoints.Count - 1)
+                        {
+                            //if the platform has hit an endpoint and hasn't started to wait
+                            if (!isWaiting)
+                            {
+                                //prevent this from infinitely waiting
+                                isWaiting = true;
+                                //wait until waitTime has passed
+                                waitUntil = Time.time + waitTime;
+                            }
+                            //if we have not reached the time to wait until, no more code
+                            //needs to be executed here
+                            if (Time.time < waitUntil)
+                            {
+                                return;
+                            }
+                            //after this point, the code may proceed
+                            //isWaiting can unlock because nextIndex changes after this
+                            isWaiting = false;
+
+                            //business as usual
+                            dir = MoveType.neg;  //it bounces back down the line
+                            lastIndex = nextIndex;  //it is coming from its current location
+                            nextIndex -= 1; //the next location is down 1
+                        }
+                        //otherwise, it is moving positively and not at its uppermost index
+                        else
+                        {
+                            lastIndex = nextIndex;  //update current location
+                            nextIndex += 1;  //update next location
+                        }
+                    }
+                    //otherwise, direction is negative
+                    else
+                    {
+                        //if it's at the lowermost index
+                        if (nextIndex == 0)
+                        {
+                            //if the platform has hit an endpoint and hasn't started to wait
+                            if (!isWaiting)
+                            {
+                                //prevent this from infinitely waiting
+                                isWaiting = true;
+                                //wait until waitTime has passed
+                                waitUntil = Time.time + waitTime;
+                            }
+                            //if we have not reached the time to wait until, no more code
+                            //needs to be executed here
+                            if (Time.time < waitUntil)
+                            {
+                                return;
+                            }
+                            //after this point, the code may proceed
+                            //isWaiting can unlock because nextIndex changes after this
+                            isWaiting = false;
+
+                            //business as usual
+                            dir = MoveType.pos;  //it bounces back up the line
+                            lastIndex = nextIndex; //it's coming from the current location
+                            nextIndex += 1; //the next location is up 1
+                        }
+                        //otherwise, it is moving negatively and not at its lowermost index
+                        else
+                        {
+                            lastIndex = nextIndex;  //update current location
+                            nextIndex -= 1;  //update next location
+                        }
+                    }
+                    //always need to set the time bits if at a node
+                    timeStarted = Time.time;
+                    currentTime = 0;  //reset just in case
+                }
+                break;
+            //only difference between endpoint and waypoint waiting is that waypoint waits
+            //immediately after detecting a waypoint being reached instead of immediately after
+            //ensuring that the waypoint reached is also an endpoint
+            case Mode.waypointWait:
+                //step 1: am i at my destination node?
+
+                //if the platform is at its destination
+                if (gameObject.transform.position == waypoints[nextIndex])
+                {
+                    //if the platform has hit any waypoint and hasn't started to wait
+                    if (!isWaiting)
+                    {
+                        //prevent this from infinitely waiting
+                        isWaiting = true;
+                        //wait until waitTime has passed
+                        waitUntil = Time.time + waitTime;
+                    }
+                    //if we have not reached the time to wait until, no more code
+                    //needs to be executed here
+                    if (Time.time < waitUntil)
+                    {
+                        return;
+                    }
+                    //after this point, the code may proceed
+                    //isWaiting can unlock because nextIndex changes after this
+                    isWaiting = false;
+
+                    //business as usual
+
+                    //if it's moving positively
+                    if (dir == MoveType.pos)
+                    {
+                        //and if it's at the uppermost index
+                        if (nextIndex == waypoints.Count - 1)
+                        {
+                            dir = MoveType.neg;  //it bounces back down the line
+                            lastIndex = nextIndex;  //it is coming from its current location
+                            nextIndex -= 1; //the next location is down 1
+                        }
+                        //otherwise, it is moving positively and not at its uppermost index
+                        else
+                        {
+                            lastIndex = nextIndex;  //update current location
+                            nextIndex += 1;  //update next location
+                        }
+                    }
+                    //otherwise, direction is negative
+                    else
+                    {
+                        //if it's at the lowermost index
+                        if (nextIndex == 0)
+                        {
+                            dir = MoveType.pos;  //it bounces back up the line
+                            lastIndex = nextIndex; //it's coming from the current location
+                            nextIndex += 1; //the next location is up 1
+                        }
+                        //otherwise, it is moving negatively and not at its lowermost index
+                        else
+                        {
+                            lastIndex = nextIndex;  //update current location
+                            nextIndex -= 1;  //update next location
+                        }
+                    }
+                    //always need to set the time bits if at a node
+                    timeStarted = Time.time;
+                    currentTime = 0;  //reset just in case
+                }
+                break;
+        }
+
+
+
+
+
+		//TODO: lerping <--
         //TODO: player dragging
+            //this might need to be done on a separate update portion due to waiting
+            //but then again, there's no movement while waiting...
 	}
 }
