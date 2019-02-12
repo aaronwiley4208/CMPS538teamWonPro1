@@ -213,7 +213,7 @@ GameObject:
   - component: {fileID: 678308841}
   - component: {fileID: 678308840}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: ball form
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -406,7 +406,7 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 65979765086543200, guid: 7ad8d5d34b0d1834cbec738318a723b1,
+    - target: {fileID: 136000011139476290, guid: 7ad8d5d34b0d1834cbec738318a723b1,
         type: 2}
       propertyPath: m_Material
       value: 
@@ -418,12 +418,7 @@ Prefab:
       value: 
       objectReference: {fileID: 1000013400546184, guid: 1b904e4f9f0bc7647bc1a8086234b024,
         type: 2}
-    - target: {fileID: 114000011903605766, guid: 7ad8d5d34b0d1834cbec738318a723b1,
-        type: 2}
-      propertyPath: suctionCollider
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 136000011139476290, guid: 7ad8d5d34b0d1834cbec738318a723b1,
+    - target: {fileID: 65979765086543200, guid: 7ad8d5d34b0d1834cbec738318a723b1,
         type: 2}
       propertyPath: m_Material
       value: 

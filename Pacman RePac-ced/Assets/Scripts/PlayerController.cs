@@ -137,26 +137,29 @@ public class PlayerController : MonoBehaviour {
 			animator.SetFloat ("Vertical", 0);
 
 		// Capture jump input
-		if (Input.GetButtonDown ("Jump"))
+		if (Input.GetKeyDown (KeyCode.Space)) {
 			willJump = true;
+			print ("jump");
+		}
 		else
 			willJump = false;
 
 		// Capture stomp input
-		if (Input.GetKeyDown (KeyCode.Q) || Input.GetButtonDown("Joypad 3"))
+		if (Input.GetKeyDown (KeyCode.Q))
 			willStomp = true;
 		else
 			willStomp = false;
 
 		// Capture slide input
-		if (Input.GetKey (KeyCode.LeftShift) || Input.GetButton ("Joypad 1"))
+		if (Input.GetKey (KeyCode.LeftShift) )
 			willSlide = true;
 		else
 			willSlide = false;
 
 
+
         // Throwing condition for no energy  = no MegaChomp
-        if (Input.GetKeyDown(KeyCode.E) || Input.GetButtonDown ("Joypad 4"))
+        if (Input.GetKeyDown(KeyCode.E) )
             //if (EnergyManager.getEnergy()> 0.0f)
             //{
             //    MegaChomp = !MegaChomp;
@@ -170,7 +173,7 @@ public class PlayerController : MonoBehaviour {
         //}
             
 
-		if (Input.GetKey (KeyCode.F) || Input.GetButton ("Joypad 6")) {
+		if (Input.GetKey (KeyCode.F)) {
 			//if (EnergyManager.getEnergy () > 0.0f) {
 			//	canFly = true;
 			//}
@@ -235,6 +238,8 @@ public class PlayerController : MonoBehaviour {
 				animator.SetBool ("Sliding", false);
 			}
 		}
+
+
 
 		// Stomping
 		if (willStomp) {

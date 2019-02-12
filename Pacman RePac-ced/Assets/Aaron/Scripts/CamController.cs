@@ -62,10 +62,10 @@ public class CamController : MonoBehaviour {
 		yRotate += Input.GetAxis("Mouse Y");
 		Vector3 direction = new Vector3 (0,0, -orbitD);
 		Quaternion rotation = Quaternion.Euler (yRotate, xRotate, 0);
-		if (Input.GetMouseButton (1)) {
+		//if (Input.GetMouseButton (1)) {
 			transform.position = target.position + rotation * direction;
 			transform.LookAt (target.position);
-		}
+		//}
 		if (Input.GetAxis ("Mouse ScrollWheel") != 0) {
 			orbitD += Input.GetAxis ("Mouse ScrollWheel") * zoomSpeed;
 		}
