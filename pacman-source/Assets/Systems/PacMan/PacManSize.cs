@@ -19,7 +19,7 @@ public class PacManSize : MonoBehaviour {
     public Image sizeUpProgBarBack;
 
     private float currentConsumedPelletSize = 0;
-    private PacManSize instance;
+    public static PacManSize instance;
 
 	// Use this for initialization
 	void Awake () {
