@@ -67,7 +67,7 @@ public class CamController : MonoBehaviour {
 			transform.LookAt (target.position);
 		//}
 		if (Input.GetAxis ("Mouse ScrollWheel") != 0) {
-			orbitD += Input.GetAxis ("Mouse ScrollWheel") * zoomSpeed;
+			orbitD -= Input.GetAxis ("Mouse ScrollWheel") * zoomSpeed;
 		}
 	}
 }

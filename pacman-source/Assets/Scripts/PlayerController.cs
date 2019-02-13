@@ -147,11 +147,10 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             willJump = true;
-            print("jump");
         }
         else
             willJump = false;
-
+		/*
         // Capture stomp input
         if (Input.GetKeyDown(KeyCode.Q))
             willStomp = true;
@@ -188,7 +187,7 @@ public class PlayerController : MonoBehaviour
                 //}
             }
             else
-                canFly = false;
+                canFly = false;*/
 
 
 
@@ -215,7 +214,8 @@ public class PlayerController : MonoBehaviour
     {
         // Update the state-keeping booleans having to do with state first
         // NOTE: Deprecated?
-        CheckGroundStatus();
+        //CheckGroundStatus();
+		checkforGround();
 
         // Apply movement only if not stomping (stomping halts XZ movement) or sliding
         Debug.DrawRay(transform.position, currentSteepSlope * 4, Color.red);
@@ -244,7 +244,7 @@ public class PlayerController : MonoBehaviour
             if (isGrounded && !isStomping && !isBouncing)
             {
                 animator.SetTrigger("Jump");
-                rigidbody.AddForce(Vector3.up * jumpForceFactor, ForceMode.VelocityChange);
+				rigidbody.AddForce(Vector3.up * jumpForceFactor, ForceMode.Impulse);
                 // Jumping interrupts sliding
                 isSliding = false;
                 animator.SetBool("Sliding", false);
@@ -312,7 +312,19 @@ public class PlayerController : MonoBehaviour
     [SerializeField] LayerMask mask;
     // Utility method to check whether the player is grounded
     // I stole this from Unity's ThirdPersonCharacter.cs
-    void CheckGroundStatus()
+    
+	void checkforGround(){
+		RaycastHit hit;
+
+		if (Physics.Raycast (transform.position, Vector3.down, capsuleCollider.height / 2 + 0.1f)) {
+			isGrounded = true;
+		} else {
+			isGrounded = false;
+		}
+	}
+
+
+	void CheckGroundStatus()
     {
         RaycastHit hitInfo;
 #if UNITY_EDITOR
