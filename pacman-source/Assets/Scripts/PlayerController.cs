@@ -316,9 +316,10 @@ public class PlayerController : MonoBehaviour
 	void checkforGround(){
 		RaycastHit hit;
 
-		if (Physics.Raycast (transform.position, Vector3.down, capsuleCollider.height / 2 + 0.1f)) {
+		if (Physics.Raycast (transform.position , Vector3.down, capsuleCollider.height / 2 + 0.1f)) {
 			isGrounded = true;
-		} else {
+		}
+		if (!Physics.Raycast (transform.position , Vector3.down, capsuleCollider.height / 2 + 0.1f)) {
 			isGrounded = false;
 		}
 	}
