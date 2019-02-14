@@ -5,6 +5,10 @@ using UnityEngine;
 public class Pellet : MonoBehaviour {
 
     [SerializeField]
+    [Tooltip("If the pellet will shrink pacman")]
+    private bool isPoison;
+
+    [SerializeField]
     [Range(0, 1)]
     [Tooltip("The alpha when pacman is colliding with pellet.")]
     private float occludedAlpha = .5f;
@@ -59,7 +63,8 @@ public class Pellet : MonoBehaviour {
         if (collision.gameObject.tag == "PacMan") {
             PacManSize pacSize = collision.gameObject.GetComponent<PacManSize>();
             if (pacSize.currentSize >= size) {
-                pacSize.Chomp(size);
+                // If the pellet is poison, deplete size
+                if (isPoison) pacSize.Chomp(-2*size); else pacSize.Chomp(size);
                 Destroy(gameObject);
             }
         }    

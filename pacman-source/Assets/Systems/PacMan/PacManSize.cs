@@ -42,6 +42,8 @@ public class PacManSize : MonoBehaviour {
     /// <param name="size"></param>
     public void Chomp(float size) {
         currentConsumedPelletSize += size;
+        // In case this brought it below 0 (cause poison)
+        if (currentConsumedPelletSize < 0) currentConsumedPelletSize = 0;
         if (currentConsumedPelletSize >= pelletsTilSizeUp)
             SizeUp();
         UpdateUI();
