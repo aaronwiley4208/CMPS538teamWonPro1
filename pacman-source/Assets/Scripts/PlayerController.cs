@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour
     new Rigidbody rigidbody;
     [SerializeField] Animator animator;
     [SerializeField] CapsuleCollider capsuleCollider;
+	public GameObject slideBall;
+	public GameObject pacBod;
 
     // Use this to initialize component references
     void Awake()
@@ -36,6 +38,8 @@ public class PlayerController : MonoBehaviour
         suctionCollider.isTrigger = true;
         originalWingsScale = wings.localScale;
         hiddenWingsScale = Vector3.zero;
+		slideBall.SetActive (false);
+		pacBod.SetActive (true);
     }
 
     // Frequently used input variables
@@ -65,14 +69,18 @@ public class PlayerController : MonoBehaviour
         return isFly;
     }
 
+
+
     // Base movement factor, unaffected by "energy"
     [SerializeField] float moveForceFactor = 5;
 
     // Jumping state
     bool willJump;
     [SerializeField] float jumpForceFactor = 8;
-    public bool isGrounded;
+    public bool isGrounded = true;
     const float GROUND_CHECK_DIST = 0.5f;
+	[SerializeField]float jumpRate = 0.75f;
+	float jumpTimer = 0;
 
     //  Stomping state to prevent actions while stomping and detect stomp landings
     bool willStomp;
@@ -102,9 +110,7 @@ public class PlayerController : MonoBehaviour
     // Capture input
     void Update()
     {
-
-
-
+		
         if (!isAlive)
             return;
 
@@ -147,11 +153,10 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             willJump = true;
-            print("jump");
         }
         else
             willJump = false;
-
+		
         // Capture stomp input
         if (Input.GetKeyDown(KeyCode.Q))
             willStomp = true;
@@ -215,7 +220,8 @@ public class PlayerController : MonoBehaviour
     {
         // Update the state-keeping booleans having to do with state first
         // NOTE: Deprecated?
-        CheckGroundStatus();
+        //CheckGroundStatus();
+		checkforGround();
 
         // Apply movement only if not stomping (stomping halts XZ movement) or sliding
         Debug.DrawRay(transform.position, currentSteepSlope * 4, Color.red);
@@ -241,13 +247,14 @@ public class PlayerController : MonoBehaviour
             willJump = false;
             // You can only jump if grounded, not stomping, and not bouncing
             // TODO Maybe allow jumping in place of bouncing when a stomp lands, not eating the jump if bouncing, allowing the player to set up a bounce-jump while still falling
-            if (isGrounded && !isStomping && !isBouncing)
+			if (/*isGrounded &&*/ !isStomping && !isBouncing && jumpTimer < Time.time)
             {
                 animator.SetTrigger("Jump");
-                rigidbody.AddForce(Vector3.up * jumpForceFactor, ForceMode.VelocityChange);
+				rigidbody.AddForce(Vector3.up * jumpForceFactor, ForceMode.VelocityChange);
                 // Jumping interrupts sliding
                 isSliding = false;
                 animator.SetBool("Sliding", false);
+				jumpTimer = Time.time + jumpRate;
             }
         }
 
@@ -283,18 +290,23 @@ public class PlayerController : MonoBehaviour
             {
                 // Stop sliding
                 isSliding = false;
-                animator.SetBool("Sliding", false);
+				slideBall.SetActive (false);
+				pacBod.SetActive (true);
+
+                //animator.SetBool("Sliding", false);
             }
         }
         else
         {
             // Do you want to start sliding?
             // You can only slide if the player is grounded and moving fast enough
-            if (willSlide && isGrounded && Vector3.ProjectOnPlane(rigidbody.velocity, Vector3.up).magnitude > SLIDING_MIN_VELOCITY)
+            if (willSlide && Vector3.ProjectOnPlane(rigidbody.velocity, Vector3.up).magnitude > SLIDING_MIN_VELOCITY)
             {
                 // Start sliding
                 isSliding = true;
-                animator.SetBool("Sliding", true);
+				slideBall.SetActive (true);
+				pacBod.SetActive (false);
+                //animator.SetBool("Sliding", true);
                 // Set the time we must be sliding until
                 stopSlidingTime = Time.time + MIN_SLIDING_DURATION;
                 // Remember the direction to keep sliding in
@@ -312,7 +324,20 @@ public class PlayerController : MonoBehaviour
     [SerializeField] LayerMask mask;
     // Utility method to check whether the player is grounded
     // I stole this from Unity's ThirdPersonCharacter.cs
-    void CheckGroundStatus()
+    
+	void checkforGround(){
+		RaycastHit hit;
+
+		if (Physics.Raycast (transform.position, Vector3.down, capsuleCollider.bounds.extents.y + 0.1f)) {
+			isGrounded = true;
+		} else {
+			isGrounded = false;
+		}
+
+	}
+
+
+	void CheckGroundStatus()
     {
         RaycastHit hitInfo;
 #if UNITY_EDITOR
