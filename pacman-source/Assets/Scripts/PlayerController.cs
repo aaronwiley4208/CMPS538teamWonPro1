@@ -15,8 +15,10 @@ public class PlayerController : MonoBehaviour
     new Rigidbody rigidbody;
     [SerializeField] Animator animator;
     [SerializeField] CapsuleCollider capsuleCollider;
+	[SerializeField] SphereCollider sphereCollider;
 	public GameObject slideBall;
 	public GameObject pacBod;
+
 
     // Use this to initialize component references
     void Awake()
@@ -40,6 +42,7 @@ public class PlayerController : MonoBehaviour
         hiddenWingsScale = Vector3.zero;
 		slideBall.SetActive (false);
 		pacBod.SetActive (true);
+		sphereCollider.enabled = false;
     }
 
     // Frequently used input variables
@@ -250,7 +253,7 @@ public class PlayerController : MonoBehaviour
 			if (/*isGrounded &&*/ !isStomping && !isBouncing && jumpTimer < Time.time)
             {
                 animator.SetTrigger("Jump");
-				rigidbody.AddForce(Vector3.up * jumpForceFactor, ForceMode.VelocityChange);
+				rigidbody.AddForce(Vector3.up * jumpForceFactor, ForceMode.Impulse);
                 // Jumping interrupts sliding
                 isSliding = false;
                 animator.SetBool("Sliding", false);
@@ -292,7 +295,8 @@ public class PlayerController : MonoBehaviour
                 isSliding = false;
 				slideBall.SetActive (false);
 				pacBod.SetActive (true);
-
+				capsuleCollider.enabled = true;
+				sphereCollider.enabled = false;
                 //animator.SetBool("Sliding", false);
             }
         }
@@ -306,6 +310,8 @@ public class PlayerController : MonoBehaviour
                 isSliding = true;
 				slideBall.SetActive (true);
 				pacBod.SetActive (false);
+				capsuleCollider.enabled = false;
+				sphereCollider.enabled = true;
                 //animator.SetBool("Sliding", true);
                 // Set the time we must be sliding until
                 stopSlidingTime = Time.time + MIN_SLIDING_DURATION;
