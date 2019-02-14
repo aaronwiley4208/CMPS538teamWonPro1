@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -154,7 +154,7 @@ GameObject:
   - component: {fileID: 195206233}
   - component: {fileID: 195206232}
   - component: {fileID: 195206231}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -498,7 +498,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!54 &678308840
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -574,12 +574,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 678308839}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.08, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.59, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_Father: {fileID: 1938011424}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &682217374
 GameObject:
@@ -802,13 +802,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 1132369902}
   capsuleCollider: {fileID: 1007511706}
+  slideBall: {fileID: 678308839}
+  pacBod: {fileID: 1132369901}
   canFly: 0
   wings: {fileID: 0}
   wingsTransitionSpeed: 5
   wingsPower: 1
   moveForceFactor: 5
-  jumpForceFactor: 75
-  isGrounded: 0
+  jumpForceFactor: 8
+  isGrounded: 1
+  jumpRate: 0.75
   stompForceFactor: 12
   stompBounceForceFactor: 5
   movementMultiplier: 1
@@ -909,7 +912,7 @@ Transform:
   - {fileID: 77737100}
   - {fileID: 463474487}
   m_Father: {fileID: 1938011424}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &1188006603
 GameObject:
@@ -1418,6 +1421,7 @@ Transform:
   m_LocalPosition: {x: -2.1314056, y: 3.0424312e-17, z: -1.3701892}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 678308844}
   - {fileID: 1132369903}
   m_Father: {fileID: 0}
   m_RootOrder: 1
