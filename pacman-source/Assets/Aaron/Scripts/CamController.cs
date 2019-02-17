@@ -58,8 +58,8 @@ public class CamController : MonoBehaviour {
 	}
 
 	void OrbitLook(){
-		xRotate += Input.GetAxis("Mouse X");
-		yRotate += Input.GetAxis("Mouse Y");
+		xRotate -= Input.GetAxis("Mouse X");
+		yRotate -= Input.GetAxis("Mouse Y");
 		Vector3 direction = new Vector3 (0,0, -orbitD);
 		Quaternion rotation = Quaternion.Euler (yRotate, xRotate, 0);
 		//if (Input.GetMouseButton (1)) {
