@@ -84,7 +84,8 @@ public class PlayerController : MonoBehaviour
     const float GROUND_CHECK_DIST = 0.5f;
 	[SerializeField]float jumpRate = 0.75f;
 	float jumpTimer = 0;
-	[SerializeField]int jumps;
+	int jumps;
+	[SerializeField]int maxJumps = 5;
 
     //  Stomping state to prevent actions while stomping and detect stomp landings
     bool willStomp;
@@ -114,6 +115,8 @@ public class PlayerController : MonoBehaviour
     // Capture input
     void Update()
     {
+
+		rigidbody.AddForce(Vector3.down * 1750, ForceMode.Force);
 		
         if (!isAlive)
             return;
@@ -251,9 +254,9 @@ public class PlayerController : MonoBehaviour
             willJump = false;
             // You can only jump if grounded, not stomping, and not bouncing
             // TODO Maybe allow jumping in place of bouncing when a stomp lands, not eating the jump if bouncing, allowing the player to set up a bounce-jump while still falling
-			if (isGrounded && !isStomping && !isBouncing && jumpTimer < Time.time)
+			if ((isGrounded || jumps > 0)&& !isStomping && !isBouncing && jumpTimer < Time.time)
             {
-				
+				jumps -= 1;
                 animator.SetTrigger("Jump");
 				rigidbody.AddForce(Vector3.up * jumpForceFactor, ForceMode.Impulse);
                 // Jumping interrupts sliding
@@ -336,8 +339,9 @@ public class PlayerController : MonoBehaviour
 	void checkforGround(){
 		RaycastHit hit;
 
-		if (Physics.Raycast (transform.position, Vector3.down, capsuleCollider.bounds.extents.y + 0.1f)) {
+		if (Physics.Raycast (transform.position, Vector3.down, capsuleCollider.bounds.extents.y + 0.01f)) {
 			isGrounded = true;
+			jumps = maxJumps;
 		} else {
 			isGrounded = false;
 		}
