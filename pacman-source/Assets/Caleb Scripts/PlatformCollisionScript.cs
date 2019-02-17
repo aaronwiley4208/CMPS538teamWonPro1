@@ -45,12 +45,22 @@ public class PlatformCollisionScript : MonoBehaviour {
         //null error or something
         if (target != null)
         {
-            if (this.gameObject.transform.parent.GetChild(1).name.CompareTo("Old pac-man") == 0)  //AHAHA THANK YOU UNITY
+            if (this.gameObject.transform.parent.childCount > 1)  //edge case check to prevent total failure
+                //if pacman's parent is changed somehow, this prevents an array out of bounds error
             {
-                this.gameObject.transform.parent.GetChild(1).parent = null;
-                target = null;  //look, this is a little spaghetti, but target not being null denotes pacman being collided
-                //if pacman leaves collision and was the target, that means we can safely assume it's definitely him leaving
+                if (this.gameObject.transform.parent.GetChild(1).name.CompareTo("Old pac-man") == 0)  //AHAHA THANK YOU UNITY
+                {
+                    this.gameObject.transform.parent.GetChild(1).parent = null;
+                    target = null;  //look, this is a little spaghetti, but target not being null denotes pacman being collided
+                    //if pacman leaves collision and was the target, that means we can safely assume it's definitely him leaving
+                }
             }
+            else
+            {
+                target = null;
+                //if an array out of bounds error would have occurred, clear target because something's clearly fucky
+            }
+            
             /*GameObject temp = col.gameObject;
 
             //while there is a parent object
