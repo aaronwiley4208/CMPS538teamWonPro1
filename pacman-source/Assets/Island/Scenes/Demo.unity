@@ -1223,16 +1223,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 4
       objectReference: {fileID: 0}
-    - target: {fileID: 114000011903605766, guid: 7ad8d5d34b0d1834cbec738318a723b1,
-        type: 2}
-      propertyPath: moveForceFactor
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 137000011375636024, guid: 7ad8d5d34b0d1834cbec738318a723b1,
-        type: 2}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7ad8d5d34b0d1834cbec738318a723b1, type: 2}
   m_IsPrefabAsset: 0

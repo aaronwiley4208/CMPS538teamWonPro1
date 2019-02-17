@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
 
     new Rigidbody rigidbody;
     [SerializeField] Animator animator;
+	[SerializeField] Animator slurpAnim;
     [SerializeField] CapsuleCollider capsuleCollider;
 	[SerializeField] SphereCollider sphereCollider;
 	public GameObject slideBall;
@@ -42,7 +43,7 @@ public class PlayerController : MonoBehaviour
 		slideBall.SetActive (false);
 		pacBod.SetActive (true);
 		sphereCollider.enabled = false;
-
+		slurpAnim = gameObject.GetComponent<Animator>();
     }
 
     // Frequently used input variables
@@ -121,6 +122,10 @@ public class PlayerController : MonoBehaviour
         if (!isAlive)
             return;
 
+		if (Input.GetKeyDown(KeyCode.E) && !isSliding)
+		{
+			slurpAnim.SetTrigger("Active");
+		}
 
         //To allow isBool to be called properly into EnergyManager
         if (megaChomp)
@@ -310,7 +315,7 @@ public class PlayerController : MonoBehaviour
         {
             // Do you want to start sliding?
             // You can only slide if the player is grounded and moving fast enough
-			if (willSlide && Vector3.ProjectOnPlane(rigidbody.velocity, Vector3.up).magnitude > SLIDING_MIN_VELOCITY)
+			if (willSlide && Vector3.ProjectOnPlane(rigidbody.velocity, Vector3.up).magnitude > SLIDING_MIN_VELOCITY && !(slurpAnim.GetCurrentAnimatorStateInfo(0).IsName("Slurp")))
             {
                 // Start sliding
                 isSliding = true;
