@@ -6,7 +6,7 @@ using UnityEngine.AI;
 
 public class EnemyPatrolBehavior : MonoBehaviour {
 
-    public enum PatrolState { PATROL, ATTACK, PUKE }
+    public enum PatrolState { PATROL, ATTACK, PUKE, RETREAT }
 
     [Tooltip("Current state, don't adjust")]
     public PatrolState currentState;
@@ -33,6 +33,15 @@ public class EnemyPatrolBehavior : MonoBehaviour {
     public GameObject poisonPellet;
     [Tooltip("How much time to wait in puke mode")]
     public float timeInPukeState;
+
+    [Header("Attacking Fields")]
+    [Tooltip("How far away pacman gets before we resume patroling")]
+    public float attackDropOffDistance;
+
+    [Header("Retreating Fields")]
+    [Tooltip("How fast the ghost runs when retreating")]
+    public float retreatSpeed;
+
 
     // Which waypoint is the destination
     public int destPoint = 0;
@@ -66,16 +75,19 @@ public class EnemyPatrolBehavior : MonoBehaviour {
         patrolUpdates.Add(PatrolState.PATROL, PatrolUpdate);
         patrolUpdates.Add(PatrolState.ATTACK, AttackUpdate);
         patrolUpdates.Add(PatrolState.PUKE, PukeUpdate);
+        patrolUpdates.Add(PatrolState.RETREAT, RetreatUpdate);
 
         patrolTransitionsIn = new Dictionary<PatrolState, Action>();
         patrolTransitionsIn.Add(PatrolState.ATTACK, AttackTransitionIn);
         patrolTransitionsIn.Add(PatrolState.PATROL, PatrolTransitionIn);
         patrolTransitionsIn.Add(PatrolState.PUKE, PukeTransitionIn);
+        patrolTransitionsIn.Add(PatrolState.RETREAT, RetreatTransitionIn);
 
         patrolTransitionsOut = new Dictionary<PatrolState, Action>();
         patrolTransitionsOut.Add(PatrolState.ATTACK, AttackTransitionOut);
         patrolTransitionsOut.Add(PatrolState.PATROL, PatrolTransitionOut);
         patrolTransitionsOut.Add(PatrolState.PUKE, PukeTransitionOut);
+        patrolTransitionsOut.Add(PatrolState.RETREAT, RetreatTransitionOut);
     }
 
     private void GoToNextPoint() {
@@ -122,11 +134,29 @@ public class EnemyPatrolBehavior : MonoBehaviour {
     }
 
     private void AttackUpdate() {
+        // Move myself towards pacman
         navAgent.destination = pacman.position;
+
+        // If pacman gets away (is more than X m away)
+        float distanceToPac = (pacman.position - transform.position).magnitude;
+        if (distanceToPac > attackDropOffDistance) {
+            Transition(PatrolState.ATTACK, PatrolState.PATROL);
+        }
     }
 
     private void PukeUpdate() {
         // Update does nothing cause we're just waiting for coroutine to run o;ut.
+    }
+
+    // Retreat is triggered when A ghost hits pacman, then it runs back to its starting position
+    private void RetreatUpdate() {
+        // Move me to the starting pose
+        Vector3 meToStart = wayPoints[0].position - transform.position;
+        transform.Translate(meToStart.normalized * retreatSpeed * Time.deltaTime, Space.World);
+        // When we're near starting point, transition back to patrol
+        if (meToStart.magnitude < 0.15f)
+            Transition(PatrolState.RETREAT, PatrolState.PATROL);
+
     }
     #endregion
 
@@ -139,7 +169,7 @@ public class EnemyPatrolBehavior : MonoBehaviour {
     }
 
     private void AttackTransitionOut() {
-
+        // Nuttin yet
     }
 
     private void AttackTransitionIn() {
@@ -173,6 +203,19 @@ public class EnemyPatrolBehavior : MonoBehaviour {
         // Stop being stopped
         navAgent.isStopped = false;
     }
+
+    private void RetreatTransitionIn() {
+        // When we start retreating, turn off the collider (so we can move through stuff and not hit pacman) and stop navAgentIng
+        GetComponent<Collider>().enabled = false;
+        navAgent.isStopped = true;
+        destPoint = 0;
+    }
+
+    private void RetreatTransitionOut() {
+        // When we stop retreating, reenable collider
+        GetComponent<Collider>().enabled = true;
+        navAgent.isStopped = false;
+    }
     #endregion
 
     #region AUXILLIARY
@@ -186,6 +229,14 @@ public class EnemyPatrolBehavior : MonoBehaviour {
         Debug.Log("Wating to somt");
         yield return new WaitForSeconds(timeInPukeState);
         Transition(currentState, PatrolState.PATROL);
+    }
+
+    void OnCollisionEnter(Collision collision) {
+        // If we hit pacman, deal some damage and retreat 
+        if (collision.collider.tag == "PacMan") {
+            collision.gameObject.GetComponent<PacManLife>().Hit();
+            Transition(currentState, PatrolState.RETREAT);
+        }
     }
     #endregion
 }

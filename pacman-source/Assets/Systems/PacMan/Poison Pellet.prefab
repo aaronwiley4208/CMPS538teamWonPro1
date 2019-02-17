@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 135205039161223528}
   - component: {fileID: 54363943461047776}
   - component: {fileID: 114582964224545190}
+  - component: {fileID: 114157444221105440}
   m_Layer: 0
   m_Name: Poison Pellet
   m_TagString: Pellet
@@ -101,6 +102,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &114157444221105440
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1999743232977998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87e8553725df7ff4d948d9a242c5357e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeTilDisappear: 15
 --- !u!114 &114582964224545190
 MonoBehaviour:
   m_ObjectHideFlags: 1
