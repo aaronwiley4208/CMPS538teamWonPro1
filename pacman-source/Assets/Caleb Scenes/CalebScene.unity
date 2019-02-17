@@ -213,7 +213,7 @@ MonoBehaviour:
   lastIndex: 0
   nextIndex: 0
   dir: 0
-  timeBetween: 1
+  timeBetween: 5
 --- !u!4 &89524423
 Transform:
   m_ObjectHideFlags: 0
@@ -442,7 +442,7 @@ MeshRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 275431146}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -564,7 +564,7 @@ MeshRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 456013548}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -993,23 +993,12 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 805775892}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5e7b7b497975114f81bb2a4c77fab6f, type: 3}
+  m_Script: {fileID: 11500000, guid: 547a72d36ac4a2847bdeaedb2dcabd8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waypointVisuals:
-  - {fileID: 1041214160}
-  - {fileID: 1840976442}
-  - {fileID: 1276497100}
-  - {fileID: 1416207857}
-  waypoints: []
-  currentMode: 0
-  waitTime: 5
-  lastIndex: 0
-  nextIndex: 0
-  dir: 0
-  timeBetween: 1
+  target: {fileID: 0}
 --- !u!1 &862978793
 GameObject:
   m_ObjectHideFlags: 0
@@ -1533,7 +1522,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1312008847}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 22.07, y: 3.101, z: 22.4}
+  m_LocalPosition: {x: 22.07, y: 0.18, z: 22.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 89524423}
