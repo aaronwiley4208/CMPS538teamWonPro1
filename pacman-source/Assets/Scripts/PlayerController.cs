@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
 	[SerializeField] SphereCollider sphereCollider;
 	public GameObject slideBall;
 	public GameObject pacBod;
+	public GameObject wings;
 
     // Use this to initialize component references
     void Awake()
@@ -36,13 +37,14 @@ public class PlayerController : MonoBehaviour
         // Capture non-sliding capsule parameters
         capsuleStartHeight = capsuleCollider.height;
         capsuleStartCenter = capsuleCollider.center;
-        suctionCollider.enabled = false;
-        suctionCollider.isTrigger = true;
-        originalWingsScale = wings.localScale;
-        hiddenWingsScale = Vector3.zero;
 		slideBall.SetActive (false);
 		pacBod.SetActive (true);
+		capsuleCollider.enabled = true;
+		suctionCollider.enabled = false;
+		suctionCollider.isTrigger = true;
+
 		sphereCollider.enabled = false;
+		wings.SetActive (false);
 		slurpAnim = gameObject.GetComponent<Animator>();
     }
 
@@ -53,25 +55,8 @@ public class PlayerController : MonoBehaviour
     Vector3 rotateVector;
     float turnAngle;
 
-    public bool canFly;
-    [SerializeField] Transform wings;
-    Vector3 originalWingsScale;
-    Vector3 hiddenWingsScale;
-    float wingsPercent = 0;
-    [SerializeField] float wingsTransitionSpeed = 5;
-    [SerializeField] float wingsPower = 1;
+   
 
-    //To allow EnergyManager to access if Mega is activated or not
-    static bool isMega = false;
-    public static bool getMega()
-    {
-        return isMega;
-    }
-    static bool isFly = false;
-    public static bool getFly()
-    {
-        return isFly;
-    }
 
 
 
@@ -101,7 +86,7 @@ public class PlayerController : MonoBehaviour
     bool isSliding;
     float stopSlidingTime;
     Vector3 slidingVelocity;
-    const float MIN_SLIDING_DURATION = 0.5f;
+    const float MIN_SLIDING_DURATION = 0.25f;
     const float SLIDING_MIN_VELOCITY = 0.1f;
     const float SLIDING_VELOCITY_DECAY = 1;
 
@@ -128,14 +113,7 @@ public class PlayerController : MonoBehaviour
 		}
 
         //To allow isBool to be called properly into EnergyManager
-        if (megaChomp)
-            isMega = true;
-        else
-            isMega = false;
-        if (canFly)
-            isFly = true;
-        else
-            isFly = false;
+        
 		
 
         // Get desired movement from input axes to camera-relative world space on the XZ plane
@@ -181,51 +159,6 @@ public class PlayerController : MonoBehaviour
             willSlide = true;
         else
             willSlide = false;
-
-
-
-        // Throwing condition for no energy  = no MegaChomp
-        if (Input.GetKeyDown(KeyCode.E))
-            //if (EnergyManager.getEnergy()> 0.0f)
-            //{
-            //    MegaChomp = !MegaChomp;
-            //}
-
-            // Cancelling MegaChomp and fly on no energy
-            //if (EnergyManager.getEnergy() <= 0)
-            //{
-            //    MegaChomp = false;
-            //    canFly = false;
-            //}
-
-
-            if (Input.GetKey(KeyCode.F))
-            {
-                //if (EnergyManager.getEnergy () > 0.0f) {
-                //	canFly = true;
-                //}
-            }
-            else
-                canFly = false;
-
-
-
-        //if (EnergyManager.getHealth() <= 0 && exitManager.getVictory() == false)
-        //{
-        //    Die();
-        //}
-
-        //if (Input.GetButton ("Jump") && !isStomping && !isSliding && EnergyManager.getEnergy () > 0.0f) {
-        //		canFly = true;
-        //		wingsPercent += Time.deltaTime * 3;
-        //} else {
-        //		canFly = false;
-        //		wingsPercent -= Time.deltaTime * 3;
-        //}
-
-        //wingsPercent = Mathf.Clamp01 (wingsPercent);
-        //wings.localScale = Vector3.Lerp (hiddenWingsScale, originalWingsScale, wingsPercent);
-
     }
 
     // Apply the input captured in Update()
@@ -251,12 +184,11 @@ public class PlayerController : MonoBehaviour
         //		rigidbody.AddTorque (0, turnAngle - rigidbody.angularVelocity.y, 0, ForceMode.VelocityChange);
         transform.Rotate(0, turnAngle, 0);
 
-        if (canFly)
-            rigidbody.AddForce(Vector3.up / Time.fixedDeltaTime * wingsPower * wingsPercent - Vector3.up * rigidbody.velocity.y, ForceMode.Force);
-
+        
         // Eat jump input
         if (willJump)
         {
+			//if is sliding && !jumpKey (force change from slide)
             willJump = false;
             // You can only jump if grounded, not stomping, and not bouncing
             // TODO Maybe allow jumping in place of bouncing when a stomp lands, not eating the jump if bouncing, allowing the player to set up a bounce-jump while still falling
@@ -265,9 +197,13 @@ public class PlayerController : MonoBehaviour
 				jumps -= 1;
                 animator.SetTrigger("Jump");
 				rigidbody.AddForce(Vector3.up * jumpForceFactor, ForceMode.Impulse);
-                // Jumping interrupts sliding
-                isSliding = false;
-                animator.SetBool("Sliding", false);
+				if(jumps < 5)
+					wings.SetActive (true);
+				isSliding = false;
+				slideBall.SetActive (false);
+				pacBod.SetActive (true);
+				capsuleCollider.enabled = true;
+				sphereCollider.enabled = false;
 				jumpTimer = Time.time + jumpRate;
             }
         }
@@ -349,6 +285,7 @@ public class PlayerController : MonoBehaviour
 		if (Physics.Raycast (transform.position, Vector3.down, capsuleCollider.bounds.extents.y + 0.01f) || Physics.Raycast (transform.position, Vector3.down, sphereCollider.bounds.extents.y + 0.01f)) {
 			isGrounded = true;
 			jumps = maxJumps;
+			wings.SetActive (false);
 		} else {
 			isGrounded = false;
 		}
