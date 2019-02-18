@@ -46,11 +46,11 @@ public class MazeBlock : MonoBehaviour {
         Vector3 newLocalScale;
         Vector3 currentLocalScale = transform.localScale;
         if (extendDirection == ExtendDirection.LEFT || extendDirection == ExtendDirection.RIGHT) {
-            boundScale = GetComponent<Renderer>().bounds.size.x;
+            boundScale = GetComponentInChildren<Renderer>().bounds.size.x;
             scale = transform.localScale.x;
             newLocalScale = new Vector3(scale * remainderBlocks, currentLocalScale.y, currentLocalScale.z);
         } else {
-            boundScale = GetComponent<Renderer>().bounds.size.z;
+            boundScale = GetComponentInChildren<Renderer>().bounds.size.z;
             scale = transform.localScale.z;
             newLocalScale = new Vector3(currentLocalScale.x, currentLocalScale.y, scale * remainderBlocks);
         }
@@ -60,12 +60,12 @@ public class MazeBlock : MonoBehaviour {
         // Spawn x blocks in the chosen direction.
         int i;
         for (i = 1; i <= numWholeBlocks; i++) {
-            GameObject block = Instantiate(gameObject, transform.position + cloneDirection * i * boundScale, Quaternion.identity, transform.parent);
+            GameObject block = Instantiate(gameObject, transform.position + cloneDirection * i * boundScale, transform.rotation, transform.parent);
             block.name = gameObject.name;
         }
         if (remainderBlocks > 0.05f) {
             // Spawn the remaining block with a reduced scale
-            GameObject partialBlock = Instantiate(gameObject, transform.position + cloneDirection * i * boundScale - cloneDirection * (((1 - remainderBlocks) * scale / 2)), Quaternion.identity, transform.parent);
+            GameObject partialBlock = Instantiate(gameObject, transform.position + cloneDirection * i * boundScale - cloneDirection * (((1 - remainderBlocks) * scale / 2)), transform.rotation, transform.parent);
             partialBlock.transform.localScale = newLocalScale;
             partialBlock.name = gameObject.name;
         }
