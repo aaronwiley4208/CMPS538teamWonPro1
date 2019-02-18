@@ -9,7 +9,10 @@ public class PacManLife : MonoBehaviour {
     public Image lifeCircle;
     public int maxLife = 4;
     public int currentLife;
+    [Header("Invincibility Fields")]
     public float invincibleTime = 0.5f;
+    public int numBlinks;
+    public Renderer pacRenderer;
 
     private bool isInvincible = false;
 
@@ -35,7 +38,13 @@ public class PacManLife : MonoBehaviour {
 
     IEnumerator BeInvincible() {
         isInvincible = true;
-        yield return new WaitForSeconds(invincibleTime);
+        float blinkTime = invincibleTime / numBlinks;
+        // Go through a number of blinks
+        for (int i = 0; i < numBlinks; i++) {
+            pacRenderer.enabled = !pacRenderer.enabled;
+            yield return new WaitForSeconds(blinkTime);
+        }
+        pacRenderer.enabled = true;
         isInvincible = false;
     }
 }

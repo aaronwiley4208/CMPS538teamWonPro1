@@ -31,8 +31,13 @@ public class EnemyPatrolBehavior : MonoBehaviour {
     [Header("Puking Fields")]
     [Tooltip("Prefab for poison pellet")]
     public GameObject poisonPellet;
+    [Tooltip("Prefab for good pellet")]
+    public GameObject goodPellet;
     [Tooltip("How much time to wait in puke mode")]
     public float timeInPukeState;
+    [Tooltip("Chance to puke a good pellet")]
+    [Range(0, 100)]
+    public float pukeChanceForGood;
 
     [Header("Attacking Fields")]
     [Tooltip("How far away pacman gets before we resume patroling")]
@@ -187,12 +192,14 @@ public class EnemyPatrolBehavior : MonoBehaviour {
     }
 
     private void PukeTransitionIn() {
+        // Gen a number to see if we drop a good or bad pellet.
+        float probability = UnityEngine.Random.Range(0, 100);
         // Do the puking
-        GameObject poisonPelletObj = Instantiate(poisonPellet, transform.position, Quaternion.identity);
+        GameObject pelletObj = Instantiate((probability < pukeChanceForGood) ? goodPellet : poisonPellet, transform.position, Quaternion.identity);
         // Put that shit on the floor
         RaycastHit hit;
-        if (Physics.Raycast(poisonPelletObj.transform.position, Vector3.down, out hit))
-            poisonPelletObj.transform.Translate(Vector3.down * (hit.distance - poisonPelletObj.transform.localScale.x/2)); // Assumes the pellet is a sphere
+        if (Physics.Raycast(pelletObj.transform.position, Vector3.down, out hit))
+            pelletObj.transform.Translate(Vector3.down * (hit.distance - pelletObj.transform.localScale.x/2)); // Assumes the pellet is a sphere
 
         // Stop him from moving and start timer
         navAgent.isStopped = true;
@@ -207,14 +214,14 @@ public class EnemyPatrolBehavior : MonoBehaviour {
     private void RetreatTransitionIn() {
         // When we start retreating, turn off the collider (so we can move through stuff and not hit pacman) and stop navAgentIng
         GetComponent<Collider>().enabled = false;
-        navAgent.isStopped = true;
+        navAgent.enabled = false;
         destPoint = 0;
     }
 
     private void RetreatTransitionOut() {
         // When we stop retreating, reenable collider
         GetComponent<Collider>().enabled = true;
-        navAgent.isStopped = false;
+        navAgent.enabled = true;
     }
     #endregion
 
