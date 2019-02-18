@@ -6,7 +6,7 @@ public class MovingPlatformScript : MonoBehaviour {
 
     //list of waypoints for the platform to move through
     public List<GameObject> waypointVisuals = new List<GameObject>();
-    public List<Vector3> waypoints = new List<Vector3>();
+    private List<Vector3> waypoints = new List<Vector3>();
 
     //mode for the platform's movement cycle
     //bounce: a->b->c, c->b->a spends as much time at endpoints as at waypoints
