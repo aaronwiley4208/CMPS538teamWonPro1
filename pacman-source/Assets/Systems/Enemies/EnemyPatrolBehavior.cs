@@ -21,6 +21,8 @@ public class EnemyPatrolBehavior : MonoBehaviour {
     [Header("Detection Fields")]
     [Tooltip("Player, so we can try to find him")]
     public Transform pacman;
+	[Tooltip("The transform we should shoot the raycast to pacman from")]
+	public Transform raycastOrigin;
     [Tooltip("Cone of sight angle")]
     public float detectionAngle;
     [Tooltip("How far away can the enemy see")]
@@ -125,12 +127,16 @@ public class EnemyPatrolBehavior : MonoBehaviour {
             GoToNextPoint();
 
         // Use a rigged cone-like detection to see if pacman is within a certain angle of line-of-sight.
-        Vector3 meToPacman = (pacman.position - transform.position).normalized;
+		Vector3 meToPacman = (pacman.position - raycastOrigin.position).normalized;
+		Debug.DrawRay (raycastOrigin.position, meToPacman, Color.red);
         float angleToPac = Mathf.Rad2Deg * Mathf.Acos(Vector3.Dot(transform.forward, meToPacman));
         if (angleToPac < detectionAngle) {
             // If so, raycast to him and see if it hits him.
             RaycastHit hit;
-            if (Physics.Raycast(transform.position, meToPacman, out hit, detectionDistance)) {
+			Debug.DrawLine(raycastOrigin.position, pacman.position);
+			if (Physics.Raycast(raycastOrigin.position, meToPacman, out hit)) {
+				Debug.Log (hit.transform.name);
+				Debug.DrawLine (raycastOrigin.position, hit.point);
                 if (hit.transform.gameObject.GetComponent<PacManSize>() != null) { // TODO: Change to a tag check
                     Transition(PatrolState.PATROL, PatrolState.ATTACK);
                 }

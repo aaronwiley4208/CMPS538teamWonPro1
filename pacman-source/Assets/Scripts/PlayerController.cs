@@ -192,12 +192,12 @@ public class PlayerController : MonoBehaviour
             willJump = false;
             // You can only jump if grounded, not stomping, and not bouncing
             // TODO Maybe allow jumping in place of bouncing when a stomp lands, not eating the jump if bouncing, allowing the player to set up a bounce-jump while still falling
-			if ((isGrounded || jumps > 0)   && !isStomping && !isBouncing && jumpTimer < Time.time)
+			if ((isGrounded || jumps > 0)  && !isSliding && !isStomping && !isBouncing && jumpTimer < Time.time)
             {
 				jumps -= 1;
                 animator.SetTrigger("Jump");
 				rigidbody.AddForce(Vector3.up * jumpForceFactor, ForceMode.Impulse);
-				if(jumps < 5)
+				if(jumps < maxJumps-1)
 					wings.SetActive (true);
 				isSliding = false;
 				slideBall.SetActive (false);
@@ -289,111 +289,9 @@ public class PlayerController : MonoBehaviour
 		} else {
 			isGrounded = false;
 		}
-
 	}
 
 
-	void CheckGroundStatus()
-    {
-        RaycastHit hitInfo;
-#if UNITY_EDITOR
-        // helper to visualise the ground check ray in the scene view
-        Debug.DrawLine(transform.position + (Vector3.up * GROUND_CHECK_DIST / 2), transform.position + (Vector3.up * GROUND_CHECK_DIST / 2) + (Vector3.down * GROUND_CHECK_DIST));
-#endif
-        // 0.1f is a small offset to start the ray from inside the character
-        isGrounded = false;
-        float leastFlatness = Mathf.Infinity;
-        currentSteepSlope = Vector3.up;
-        if (Physics.Raycast(transform.position + (Vector3.up * 0.1f), Vector3.down, out hitInfo, GROUND_CHECK_DIST, mask))
-        {
-            isGrounded = true;
-            float thisFlatness = Vector3.Dot(hitInfo.normal, Vector3.up);
-            if (thisFlatness < leastFlatness)
-            {
-                leastFlatness = thisFlatness;
-                currentSteepSlope = hitInfo.normal;
-            }
-        }
-        if (Physics.Raycast(transform.position + transform.forward * capsuleCollider.radius + (Vector3.up * 0.1f), Vector3.down, out hitInfo, GROUND_CHECK_DIST, mask))
-        {
-            isGrounded = true;
-            float thisFlatness = Vector3.Dot(hitInfo.normal, Vector3.up);
-            if (thisFlatness < leastFlatness)
-            {
-                leastFlatness = thisFlatness;
-                currentSteepSlope = hitInfo.normal;
-            }
-        }
-        if (Physics.Raycast(transform.position + transform.right * capsuleCollider.radius + (Vector3.up * 0.1f), Vector3.down, out hitInfo, GROUND_CHECK_DIST, mask))
-        {
-            isGrounded = true;
-            float thisFlatness = Vector3.Dot(hitInfo.normal, Vector3.up);
-            if (thisFlatness < leastFlatness)
-            {
-                leastFlatness = thisFlatness;
-                currentSteepSlope = hitInfo.normal;
-            }
-        }
-        if (Physics.Raycast(transform.position + transform.forward * -capsuleCollider.radius + (Vector3.up * 0.1f), Vector3.down, out hitInfo, GROUND_CHECK_DIST, mask))
-        {
-            isGrounded = true;
-            float thisFlatness = Vector3.Dot(hitInfo.normal, Vector3.up);
-            if (thisFlatness < leastFlatness)
-            {
-                leastFlatness = thisFlatness;
-                currentSteepSlope = hitInfo.normal;
-            }
-        }
-        if (Physics.Raycast(transform.position + transform.right * -capsuleCollider.radius + (Vector3.up * 0.1f), Vector3.down, out hitInfo, GROUND_CHECK_DIST, mask))
-        {
-            isGrounded = true;
-            float thisFlatness = Vector3.Dot(hitInfo.normal, Vector3.up);
-            if (thisFlatness < leastFlatness)
-            {
-                leastFlatness = thisFlatness;
-                currentSteepSlope = hitInfo.normal;
-            }
-        }
-
-
-        // Forward check just for steepness
-        if (Physics.Raycast(transform.position, transform.forward, out hitInfo, capsuleCollider.radius * 1.1f, mask))
-        {
-            //Debug.Log (hitInfo.transform.name);
-            float thisFlatness = Vector3.Dot(hitInfo.normal, Vector3.up);
-            if (thisFlatness < leastFlatness)
-            {
-                leastFlatness = thisFlatness;
-                currentSteepSlope = hitInfo.normal;
-            }
-        }
-
-        //		if (Physics.SphereCast(transform.position + Vector3.up * (capsuleCollider.radius * 1.3f), (capsuleCollider.radius * 1.3f), Vector3.down, out hitInfo, GROUND_CHECK_DIST, mask)) {
-        //			isGrounded = true;
-        //			float thisFlatness = Vector3.Dot (hitInfo.normal, Vector3.up);
-        //			if (thisFlatness < leastFlatness) {
-        //				leastFlatness = thisFlatness;
-        //				currentSteepSlope = hitInfo.normal;
-        //			}
-        //		}
-
-        if (isGrounded)
-        {
-            if (isStomping)
-            {
-                // Stomped on something
-                isStomping = false;
-                animator.SetBool("Stomping", false);
-                animator.SetTrigger("Stomp");
-                isBouncing = true;
-                rigidbody.AddForce(Vector3.up * (stompBounceForceFactor - rigidbody.velocity.y), ForceMode.VelocityChange);
-                //OnStomp (hitInfo);
-            }
-            else if (isBouncing)
-                isBouncing = false;
-        }
-
-    }
 
     [SerializeField] GameObject stompImpactEffectPrefab;
 
