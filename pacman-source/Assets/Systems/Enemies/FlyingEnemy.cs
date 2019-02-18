@@ -36,7 +36,7 @@ public class FlyingEnemy : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         initDicts();
-        currentState = FlyingEnemyState.CHASE;
+		currentState = FlyingEnemyState.PATROL;
         destPoint = 0;
 	}
 

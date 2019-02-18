@@ -17,11 +17,14 @@ public class PacManSize : MonoBehaviour {
     [Header("UI Fields")]
     public Image sizeUpProgBar;
     public Image sizeUpProgBarBack;
+	public Slider sizeUpSlider;
     public TMPro.TextMeshProUGUI scoreText;
 
     private float currentConsumedPelletSize = 0;
     private float totalConsumedPelletSize = 0;
     public static PacManSize instance;
+
+
 
 	// Use this for initialization
 	void Awake () {
@@ -50,6 +53,7 @@ public class PacManSize : MonoBehaviour {
         if (currentConsumedPelletSize >= pelletsTilSizeUp)
             SizeUp();
         UpdateUI();
+
     }
 
     // Increase PacMan Size
@@ -58,15 +62,19 @@ public class PacManSize : MonoBehaviour {
         transform.localScale = new Vector3(currentSize, currentSize, currentSize);
         pelletsTilSizeUp += 1;
         currentConsumedPelletSize = 0;
+		GetComponent<PacManLife> ().HPUp (2);
     }
 
     // Fill progress bars and say things like +size and stuff.
     private void UpdateUI() {
-        sizeUpProgBar.rectTransform.sizeDelta = new Vector2(pelletsTilSizeUp * 100, 45);
-        sizeUpProgBarBack.rectTransform.sizeDelta = new Vector2(pelletsTilSizeUp * 100, 45);
+		sizeUpSlider.GetComponent<RectTransform> ().sizeDelta = new Vector2 (pelletsTilSizeUp * 100, 20);
+        //sizeUpProgBar.rectTransform.sizeDelta = new Vector2(pelletsTilSizeUp * 100, 45);
+        //sizeUpProgBarBack.rectTransform.sizeDelta = new Vector2(pelletsTilSizeUp * 100, 45);
         float sizeUpFill = currentConsumedPelletSize / pelletsTilSizeUp;
-        sizeUpProgBar.fillAmount = sizeUpFill;
+        //sizeUpProgBar.fillAmount = sizeUpFill;
+		sizeUpSlider.value = sizeUpFill;
 
-        scoreText.text = "Total Size: " + totalConsumedPelletSize + "m";
+
+        //scoreText.text = "Total Size: " + totalConsumedPelletSize + "m";
     }
 }

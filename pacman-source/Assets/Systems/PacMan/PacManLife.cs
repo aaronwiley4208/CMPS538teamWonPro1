@@ -16,9 +16,15 @@ public class PacManLife : MonoBehaviour {
 
     private bool isInvincible = false;
 
+	public Animator anim;
+	public PlayerController controller;
+
 	// Use this for initialization
 	void Start () {
         currentLife = maxLife;
+		if (!anim)
+			anim = GetComponentInChildren<Animator>();
+		controller = GetComponent<PlayerController> ();
 	}
 	
     // What happens when pacman takes a hit
@@ -28,13 +34,25 @@ public class PacManLife : MonoBehaviour {
             // Update UI
             lifeCircle.fillAmount = (float)currentLife / maxLife;
             // Check if dead
-            if (currentLife == 0)
-                Debug.Log("Die");
-
+			if (currentLife <= 0) {
+				Debug.Log ("Die");
+				anim.SetTrigger ("Die");
+				controller.enabled = false;
+				float timer = Time.time + 2;
+				if(timer <= Time.time){
+					print ("load death scene");
+				}
+				//loads scene to respawn
+			}
             // Start invincibility
             StartCoroutine("BeInvincible");
         }
     }
+
+	public void HPUp(int amount) {
+		currentLife = Mathf.Clamp (currentLife + amount, 0, maxLife);
+		lifeCircle.fillAmount = (float)currentLife / maxLife;
+	}
 
     IEnumerator BeInvincible() {
         isInvincible = true;

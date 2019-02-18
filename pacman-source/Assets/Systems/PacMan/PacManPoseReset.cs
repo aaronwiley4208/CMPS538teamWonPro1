@@ -23,8 +23,8 @@ public class PacManPoseReset : MonoBehaviour {
         positionHistory.Add(transform.position);
         if (positionHistory.Count > 80)
             positionHistory.RemoveAt(0);
-        if (Input.GetKeyDown(KeyCode.Space))
-            Reset();
+        //if (Input.GetKeyDown(KeyCode.Space))
+            //Reset();
 	}
 
     /// <summary>
