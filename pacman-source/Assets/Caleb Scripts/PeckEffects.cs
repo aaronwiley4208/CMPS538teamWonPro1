@@ -36,20 +36,12 @@ public class PeckEffects : MonoBehaviour {
             //given current behavior, trigger flee behavior
             //increment points
         }
-        else if (temp.name.Contains("Super"))
+        else if (temp.name.Contains("Mega"))
         {
             //trigger super pellet effect
             Destroy(temp);
             //increment points
             StartCoroutine("Invuln");
-        }
-        else if (temp.name.Contains("ellet"))
-        {
-            //do normal pellet effect
-            Destroy(temp);
-            //increment points
-            //minor increment energy
-            //MAKE SURE NOT TO STEP ON TOES OF NORMAL PELLET BEHAVIOR
         }
         else
         {

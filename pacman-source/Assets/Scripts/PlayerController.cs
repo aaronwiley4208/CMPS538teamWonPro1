@@ -119,7 +119,9 @@ public class PlayerController : MonoBehaviour
 
 		if (Input.GetKeyDown(KeyCode.E) && !isSliding)
 		{
-			slurpAnim.SetTrigger("Active");
+            // Remove Size from pac and make sure we can chomp
+            if (sizeScript.MegaChomp())
+			    slurpAnim.SetTrigger("Active");
 		}
 		
 
