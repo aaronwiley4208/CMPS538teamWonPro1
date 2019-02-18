@@ -17,8 +17,10 @@ public class PacManSize : MonoBehaviour {
     [Header("UI Fields")]
     public Image sizeUpProgBar;
     public Image sizeUpProgBarBack;
+    public TMPro.TextMeshProUGUI scoreText;
 
     private float currentConsumedPelletSize = 0;
+    private float totalConsumedPelletSize = 0;
     public static PacManSize instance;
 
 	// Use this for initialization
@@ -42,6 +44,9 @@ public class PacManSize : MonoBehaviour {
     /// <param name="size"></param>
     public void Chomp(float size) {
         currentConsumedPelletSize += size;
+        totalConsumedPelletSize += size;
+        // In case this brought it below 0 (cause poison)
+        if (currentConsumedPelletSize < 0) currentConsumedPelletSize = 0;
         if (currentConsumedPelletSize >= pelletsTilSizeUp)
             SizeUp();
         UpdateUI();
@@ -61,5 +66,7 @@ public class PacManSize : MonoBehaviour {
         sizeUpProgBarBack.rectTransform.sizeDelta = new Vector2(pelletsTilSizeUp * 100, 45);
         float sizeUpFill = currentConsumedPelletSize / pelletsTilSizeUp;
         sizeUpProgBar.fillAmount = sizeUpFill;
+
+        scoreText.text = "Total Size: " + totalConsumedPelletSize + "m";
     }
 }
