@@ -1444,12 +1444,13 @@ MonoBehaviour:
   slideBall: {fileID: 1639107386957256}
   pacBod: {fileID: 1000013380320860}
   wings: {fileID: 1356916728331818}
+  sizeScript: {fileID: 114104202481436044}
   moveForceFactor: 8
   jumpForceFactor: 1000
   isGrounded: 1
   jumpRate: 0.3
   jumps: 0
-  maxJumps: 1
+  maxJumps: 5
   stompForceFactor: 12
   stompBounceForceFactor: 5
   movementMultiplier: 1
@@ -1495,6 +1496,7 @@ MonoBehaviour:
   sizeUpProgBarBack: {fileID: 0}
   sizeUpSlider: {fileID: 0}
   scoreText: {fileID: 0}
+  isSmall: 1
 --- !u!114 &114486929230507952
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1525,6 +1527,8 @@ MonoBehaviour:
   invincibleTime: 0.5
   numBlinks: 5
   pacRenderer: {fileID: 137000011375636024}
+  anim: {fileID: 95000014187158016}
+  controller: {fileID: 0}
 --- !u!135 &135021268280094844
 SphereCollider:
   m_ObjectHideFlags: 1

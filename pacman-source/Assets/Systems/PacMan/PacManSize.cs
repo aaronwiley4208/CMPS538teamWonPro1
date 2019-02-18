@@ -24,7 +24,8 @@ public class PacManSize : MonoBehaviour {
     private float totalConsumedPelletSize = 0;
     public static PacManSize instance;
 
-
+	public bool isSmall = true;
+	public int level = 0;
 
 	// Use this for initialization
 	void Awake () {
@@ -63,6 +64,8 @@ public class PacManSize : MonoBehaviour {
         pelletsTilSizeUp += 1;
         currentConsumedPelletSize = 0;
 		GetComponent<PacManLife> ().HPUp (2);
+		isSmall = false;
+		level++;
     }
 
     // Fill progress bars and say things like +size and stuff.

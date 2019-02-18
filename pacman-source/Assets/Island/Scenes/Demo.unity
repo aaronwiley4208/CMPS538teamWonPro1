@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.4
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.28739646, g: 0.32141533, b: 0.37493777, a: 0.4}
+  m_IndirectSpecularColor: {r: 0.28739646, g: 0.32141548, b: 0.37493816, a: 0.4}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &4
 LightmapSettings:
@@ -1736,6 +1736,52 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf5c716dea4419148879f65f4373d70d, type: 2}
   m_IsPrefabAsset: 0
+--- !u!1001 &561742047
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4888209635231584, guid: 5024a8e3746b93949ba8d4788cb4cc0a, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -1.702
+      objectReference: {fileID: 0}
+    - target: {fileID: 4888209635231584, guid: 5024a8e3746b93949ba8d4788cb4cc0a, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 6.3130713
+      objectReference: {fileID: 0}
+    - target: {fileID: 4888209635231584, guid: 5024a8e3746b93949ba8d4788cb4cc0a, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 2.5989075
+      objectReference: {fileID: 0}
+    - target: {fileID: 4888209635231584, guid: 5024a8e3746b93949ba8d4788cb4cc0a, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4888209635231584, guid: 5024a8e3746b93949ba8d4788cb4cc0a, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4888209635231584, guid: 5024a8e3746b93949ba8d4788cb4cc0a, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4888209635231584, guid: 5024a8e3746b93949ba8d4788cb4cc0a, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4888209635231584, guid: 5024a8e3746b93949ba8d4788cb4cc0a, type: 2}
+      propertyPath: m_RootOrder
+      value: 23
+      objectReference: {fileID: 0}
+    - target: {fileID: 1648436703559034, guid: 5024a8e3746b93949ba8d4788cb4cc0a, type: 2}
+      propertyPath: m_Name
+      value: Pellet (7)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 5024a8e3746b93949ba8d4788cb4cc0a, type: 2}
+  m_IsPrefabAsset: 0
 --- !u!4 &561797007 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4766844975258962, guid: f10c9cc2c9346a64ca4e529d3d951f17,
@@ -2570,16 +2616,6 @@ Prefab:
       propertyPath: sizeUpSlider
       value: 
       objectReference: {fileID: 871621602}
-    - target: {fileID: 114955808897518142, guid: 7ad8d5d34b0d1834cbec738318a723b1,
-        type: 2}
-      propertyPath: anim
-      value: 
-      objectReference: {fileID: 1575364409}
-    - target: {fileID: 114000011903605766, guid: 7ad8d5d34b0d1834cbec738318a723b1,
-        type: 2}
-      propertyPath: maxJumps
-      value: 5
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7ad8d5d34b0d1834cbec738318a723b1, type: 2}
   m_IsPrefabAsset: 0
@@ -4104,7 +4140,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4888209635231584, guid: 5024a8e3746b93949ba8d4788cb4cc0a, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -4.6781616
+      value: -5.768
       objectReference: {fileID: 0}
     - target: {fileID: 4888209635231584, guid: 5024a8e3746b93949ba8d4788cb4cc0a, type: 2}
       propertyPath: m_LocalPosition.y
@@ -4265,11 +4301,6 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1560020069}
   m_CullTransparentMesh: 0
---- !u!95 &1575364409 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 95000014187158016, guid: 7ad8d5d34b0d1834cbec738318a723b1,
-    type: 2}
-  m_PrefabInternal: {fileID: 902433281}
 --- !u!4 &1579038614 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 412076, guid: cae8e749c8d3eb44da3bdd1e6c9f42fd,
