@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PacManLife : MonoBehaviour {
 
@@ -19,6 +20,11 @@ public class PacManLife : MonoBehaviour {
 	public Animator anim;
 	public PlayerController controller;
 
+    public AudioSource auxOut;
+    public AudioClip death;
+    public CapsuleCollider capsule;
+    public SphereCollider sphere;
+
 	// Use this for initialization
 	void Start () {
         currentLife = maxLife;
@@ -35,13 +41,7 @@ public class PacManLife : MonoBehaviour {
             lifeCircle.fillAmount = (float)currentLife / maxLife;
             // Check if dead
 			if (currentLife <= 0) {
-				Debug.Log ("Die");
-				anim.SetTrigger ("Die");
-				controller.enabled = false;
-				float timer = Time.time + 2;
-				if(timer <= Time.time){
-					print ("load death scene");
-				}
+                StartCoroutine("Die");
 				//loads scene to respawn
 			}
             // Start invincibility
@@ -64,5 +64,19 @@ public class PacManLife : MonoBehaviour {
         }
         pacRenderer.enabled = true;
         isInvincible = false;
+    }
+
+    IEnumerator Die() {
+        Debug.Log("Die");
+        anim.SetTrigger("Die");
+        controller.enabled = false;
+        capsule.enabled = false;
+        sphere.enabled = false;
+        auxOut.clip = death;
+        auxOut.Play();
+
+        yield return new WaitForSeconds(2.5f);
+
+        SceneManager.LoadScene("Game Over Scene");
     }
 }

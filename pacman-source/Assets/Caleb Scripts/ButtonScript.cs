@@ -17,7 +17,7 @@ public class ButtonScript : MonoBehaviour {
 
     public void StartButton()
     {
-        SceneManager.LoadScene("Game Scene");
+        SceneManager.LoadScene("Nick");
     }
 
     public void HelpButton()

@@ -76,7 +76,7 @@ public class PacManSize : MonoBehaviour {
     private void SizeUp() {
         currentSize += .2f;
         transform.localScale = new Vector3(currentSize, currentSize, currentSize);
-        pelletsTilSizeUp += 1;
+        pelletsTilSizeUp += 2;
         currentConsumedPelletSize = 0;
 		GetComponent<PacManLife> ().HPUp (2);
 		isSmall = false;
@@ -104,7 +104,7 @@ public class PacManSize : MonoBehaviour {
 
     // Fill progress bars and say things like +size and stuff.
     private void UpdateUI() {
-		sizeUpSlider.GetComponent<RectTransform> ().sizeDelta = new Vector2 (pelletsTilSizeUp * 100, 20);
+		sizeUpSlider.GetComponent<RectTransform> ().sizeDelta = new Vector2 (pelletsTilSizeUp * 50, 20);
         //sizeUpProgBar.rectTransform.sizeDelta = new Vector2(pelletsTilSizeUp * 100, 45);
         //sizeUpProgBarBack.rectTransform.sizeDelta = new Vector2(pelletsTilSizeUp * 100, 45);
         float sizeUpFill = currentConsumedPelletSize / pelletsTilSizeUp;
