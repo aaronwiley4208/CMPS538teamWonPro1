@@ -21,6 +21,8 @@ public class PacManSize : MonoBehaviour {
     public Image sizeUpProgBarBack;
 	public Slider sizeUpSlider;
     public TMPro.TextMeshProUGUI scoreText;
+    public TMPro.TextMeshProUGUI jumpsText;
+    public TMPro.TextMeshProUGUI swimText;
 
     private float currentConsumedPelletSize = 0;
     private float totalConsumedPelletSize = 0;
@@ -30,6 +32,11 @@ public class PacManSize : MonoBehaviour {
 	public int level = 0;
 
     public List<MegaPellet> megapellets;
+
+    public AudioSource auxOut;
+    public List<AudioClip> clips;
+
+    public PacManPoseReset poseReset;
 
 	// Use this for initialization
 	void Awake () {
@@ -51,6 +58,10 @@ public class PacManSize : MonoBehaviour {
     /// </summary>
     /// <param name="size"></param>
     public void Chomp(float size) {
+        int clip = Mathf.RoundToInt(UnityEngine.Random.Range(0,2));
+        auxOut.clip = clips[clip];
+        auxOut.Play();
+
         currentConsumedPelletSize += size;
         totalConsumedPelletSize += size;
         // In case this brought it below 0 (cause poison)
@@ -70,6 +81,10 @@ public class PacManSize : MonoBehaviour {
 		GetComponent<PacManLife> ().HPUp (2);
 		isSmall = false;
 		level++;
+        if (level > 5) {
+            poseReset.enabled = false;
+            swimText.text = "Swim: Yes";
+        }
 
         // Also increase size of MegaPellets
         foreach (var mp in megapellets)
@@ -96,8 +111,8 @@ public class PacManSize : MonoBehaviour {
         //sizeUpProgBar.fillAmount = sizeUpFill;
 		sizeUpSlider.value = sizeUpFill;
 
-
-        //scoreText.text = "Total Size: " + totalConsumedPelletSize + "m";
+        scoreText.text = "Total Size: " + totalConsumedPelletSize + "m";
+        jumpsText.text = "Jumps: " + level;
     }
 
     public void AddMegapellet(MegaPellet mp) {

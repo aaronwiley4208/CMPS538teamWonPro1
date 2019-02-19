@@ -11,6 +11,10 @@ public class PacManPoseReset : MonoBehaviour {
     public int positionCapacity;
     [Tooltip("Default number of frames to jump back to.")]
     public int resetFrameDefault;
+    [Tooltip("Death height")]
+    public float deathHeight;
+    public float heightAdd;
+    public PacManLife life;
 
 	// Use this for initialization
 	void Start () {
@@ -23,6 +27,12 @@ public class PacManPoseReset : MonoBehaviour {
         positionHistory.Add(transform.position);
         if (positionHistory.Count > 80)
             positionHistory.RemoveAt(0);
+
+        // See if we're below death height
+        if (transform.position.y < deathHeight) {
+            life.Hit();
+            Reset();
+        }
         //if (Input.GetKeyDown(KeyCode.Space))
             //Reset();
 	}
@@ -36,7 +46,7 @@ public class PacManPoseReset : MonoBehaviour {
         if (positionHistory.Count < frame) frame = positionHistory.Count - 1;
         // Find that position. We're counting backwards since the end is where the most recent frames are. 
         int poseHistoryIndex = positionHistory.Count - frame;
-        Vector3 desiredPosition = positionHistory[poseHistoryIndex];
+        Vector3 desiredPosition = positionHistory[poseHistoryIndex] + Vector3.up * heightAdd;
 
         // NOTE: May not work with real pacman model
         GetComponent<Rigidbody>().MovePosition(desiredPosition);
