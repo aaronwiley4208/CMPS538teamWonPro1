@@ -180,7 +180,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: MEN
+  m_Text: Main Menu
 --- !u!222 &96457255
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -324,19 +324,19 @@ MonoBehaviour:
   m_Text: 'Made By:
 
 
-    Me
+    Nicholas Fisher
 
 
-    Him
+    Caleb George
 
 
-    That Guy
+    Aaron Wiley
 
 
-    The Other Guy
+    Jason Woodworth
 
 
-    (Not You)'
+    And Especially You! (not really)'
 --- !u!222 &742825050
 CanvasRenderer:
   m_ObjectHideFlags: 0

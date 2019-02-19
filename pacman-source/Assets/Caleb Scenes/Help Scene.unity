@@ -377,7 +377,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: MEN
+  m_Text: Main Menu
 --- !u!222 &1004605533
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -715,10 +715,10 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 36
+    m_FontSize: 24
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 3
+    m_MinSize: 2
     m_MaxSize: 40
     m_Alignment: 1
     m_AlignByGeometry: 0
@@ -726,10 +726,15 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 'How Do:
+  m_Text: 'WASD/Arrows: Movement
 
+    Mouse: Camera
 
-    Just stop sucking lol'
+    Spacebar: Jump/multijump (gained on sizing up)
+
+    Shift: Ball mode (Crouch)
+
+    E: Mega Peck'
 --- !u!222 &1996784404
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -107,7 +107,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
 		//faux gravity
-		rigidbody.AddForce(Vector3.down * 1750, ForceMode.Force);
+		rigidbody.AddForce(Vector3.down * 1750 * (1 + 0.2f * sizeScript.level), ForceMode.Force);
 
 		if(!sizeScript.isSmall){
 			//turns on pacman body if you size up
@@ -291,7 +291,7 @@ public class PlayerController : MonoBehaviour
 
 		if (Physics.Raycast (transform.position, Vector3.down, capsuleCollider.bounds.extents.y + 0.01f) || Physics.Raycast (transform.position, Vector3.down, sphereCollider.bounds.extents.y + 0.01f)) {
 			isGrounded = true;
-			jumps = sizeScript.level;
+            jumps = (maxJumps > sizeScript.level) ? sizeScript.level : maxJumps;
 			wings.SetActive (false);
 		} else {
 			isGrounded = false;

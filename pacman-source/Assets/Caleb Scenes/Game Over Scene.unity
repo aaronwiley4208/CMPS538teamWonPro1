@@ -257,7 +257,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: You've been unalived!
+  m_Text: You died!
 --- !u!222 &656525134
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -726,7 +726,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: How did?
+  m_Text: Results
 --- !u!222 &2142294241
 CanvasRenderer:
   m_ObjectHideFlags: 0
