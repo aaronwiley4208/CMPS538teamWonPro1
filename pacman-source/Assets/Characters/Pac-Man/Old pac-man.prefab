@@ -1461,8 +1461,8 @@ MonoBehaviour:
   pacBod: {fileID: 1000013380320860}
   wings: {fileID: 1356916728331818}
   sizeScript: {fileID: 114104202481436044}
-  moveForceFactor: 8
-  jumpForceFactor: 1000
+  moveForceFactor: 5
+  jumpForceFactor: 800
   isGrounded: 1
   jumpRate: 0.3
   jumps: 0

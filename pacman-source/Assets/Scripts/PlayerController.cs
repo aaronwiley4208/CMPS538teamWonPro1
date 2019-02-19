@@ -97,6 +97,8 @@ public class PlayerController : MonoBehaviour
     Vector3 capsuleStartCenter;
     Vector3 capsuleSlideCenter = new Vector3(0, 0.5f, 0);
 
+	bool hasGrown = false;
+
 
     // Movement multiplier for player energy to affect
     [HideInInspector] public float movementMultiplier = 1;
@@ -107,12 +109,18 @@ public class PlayerController : MonoBehaviour
 		//faux gravity
 		rigidbody.AddForce(Vector3.down * 1750, ForceMode.Force);
 
-		if(!sizeScript.isSmall && sizeScript.level == 0){
-			slideBall.SetActive (false);
-			pacBod.SetActive (true);
-			capsuleCollider.enabled = true;
-			sphereCollider.enabled = false;
+		if(!sizeScript.isSmall){
+			//turns on pacman body if you size up
+			if(!hasGrown){
+				slideBall.SetActive (false);
+				pacBod.SetActive (true);
+				capsuleCollider.enabled = true;
+				sphereCollider.enabled = false;
+				hasGrown = true;
+			}
+
 		}
+
 
         if (!isAlive)
             return;
@@ -178,10 +186,12 @@ public class PlayerController : MonoBehaviour
         //CheckGroundStatus();
 		checkforGround();
 
+
+
         // Apply movement only if not stomping (stomping halts XZ movement) or sliding
         Debug.DrawRay(transform.position, currentSteepSlope * 4, Color.red);
         if (!isStomping && !isSliding)
-            rigidbody.AddForce(moveVector * moveForceFactor * movementMultiplier + Vector3.ProjectOnPlane(currentSteepSlope, Vector3.up) * Vector3.ProjectOnPlane(currentSteepSlope, Vector3.up).magnitude * steepnessSlowMultiplier - Vector3.ProjectOnPlane(rigidbody.velocity, Vector3.up), ForceMode.VelocityChange);
+			rigidbody.AddForce(moveVector * (1 + 0.2f * sizeScript.level) * moveForceFactor * movementMultiplier + Vector3.ProjectOnPlane(currentSteepSlope, Vector3.up) * Vector3.ProjectOnPlane(currentSteepSlope, Vector3.up).magnitude * steepnessSlowMultiplier - Vector3.ProjectOnPlane(rigidbody.velocity, Vector3.up), ForceMode.VelocityChange);
 
         if (isSliding)
             //If sliding, turn in direction of velocity
@@ -201,13 +211,15 @@ public class PlayerController : MonoBehaviour
             willJump = false;
             // You can only jump if grounded, not stomping, and not bouncing
             // TODO Maybe allow jumping in place of bouncing when a stomp lands, not eating the jump if bouncing, allowing the player to set up a bounce-jump while still falling
-			if ((isGrounded || jumps > 0) && sizeScript.level>0 && !isSliding && !isStomping && !isBouncing && jumpTimer < Time.time)
+			if ((isGrounded || jumps > 1) && sizeScript.level > 0 && !isSliding && !isStomping && !isBouncing && jumpTimer < Time.time)
             {
 				jumps -= 1;
                 animator.SetTrigger("Jump");
-				rigidbody.AddForce(Vector3.up * jumpForceFactor, ForceMode.Impulse);
-				if(jumps < maxJumps-1)
+				rigidbody.AddForce(Vector3.up * jumpForceFactor * (1 + 0.2f * sizeScript.level), ForceMode.Impulse);
+				if (jumps < sizeScript.level-1) {
 					wings.SetActive (true);
+					print ("ggs");
+				}
 				isSliding = false;
 				slideBall.SetActive (false);
 				pacBod.SetActive (true);
