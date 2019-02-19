@@ -641,6 +641,7 @@ GameObject:
   - component: {fileID: 23256921538381282}
   - component: {fileID: 135021268280094844}
   - component: {fileID: 114029381600595766}
+  - component: {fileID: 54741158246975898}
   m_Layer: 8
   m_Name: Sphere
   m_TagString: Untagged
@@ -1363,6 +1364,21 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!54 &54741158246975898
+Rigidbody:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1968789535114398}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!65 &65979765086543200
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -1479,6 +1495,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2ece868dc542c842bd443b5e154b24e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pacRenderer: {fileID: 137000011375636024}
+  ballRenderer: {fileID: 23745732866819428}
+  life: {fileID: 114955808897518142}
 --- !u!114 &114104202481436044
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1492,11 +1511,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentSize: 0.5
   pelletsTilSizeUp: 0.8
+  sizeLostOnChomp: 1
   sizeUpProgBar: {fileID: 0}
   sizeUpProgBarBack: {fileID: 0}
   sizeUpSlider: {fileID: 0}
   scoreText: {fileID: 0}
   isSmall: 1
+  level: 0
+  megapellets: []
 --- !u!114 &114486929230507952
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1527,6 +1549,7 @@ MonoBehaviour:
   invincibleTime: 0.5
   numBlinks: 5
   pacRenderer: {fileID: 137000011375636024}
+  isInvincible: 0
   anim: {fileID: 95000014187158016}
   controller: {fileID: 0}
 --- !u!135 &135021268280094844
@@ -1536,7 +1559,7 @@ SphereCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1968789535114398}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 0
   serializedVersion: 2
   m_Radius: 1

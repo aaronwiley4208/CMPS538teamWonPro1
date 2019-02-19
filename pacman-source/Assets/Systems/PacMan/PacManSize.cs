@@ -73,7 +73,7 @@ public class PacManSize : MonoBehaviour {
 
         // Also increase size of MegaPellets
         foreach (var mp in megapellets)
-            mp.SizeUp(currentSize);
+            mp.PelletSizeUp(currentSize);
     }
     
     public bool MegaChomp() {

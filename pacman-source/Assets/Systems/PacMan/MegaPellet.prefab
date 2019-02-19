@@ -23,8 +23,8 @@ GameObject:
   - component: {fileID: 23391468010154574}
   - component: {fileID: 135401546755797702}
   - component: {fileID: 54893722631048130}
-  - component: {fileID: 114953338870990614}
   - component: {fileID: 122945064582740810}
+  - component: {fileID: 114167454909522504}
   m_Layer: 0
   m_Name: MegaPellet
   m_TagString: Pellet
@@ -102,7 +102,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &114953338870990614
+--- !u!114 &114167454909522504
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -110,13 +110,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1251894824587546}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3cbdcbc0b3467b843b4a15f4891465cb, type: 3}
+  m_Script: {fileID: 11500000, guid: 0438f6253dde5984496080a9a6d3f8d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isPoison: 0
-  occludedAlpha: 0.5
-  fadeTime: 0.1
-  fadeInterval: 0.02
 --- !u!122 &122945064582740810
 Halo:
   m_ObjectHideFlags: 1

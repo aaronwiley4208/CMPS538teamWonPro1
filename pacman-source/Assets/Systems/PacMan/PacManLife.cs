@@ -14,7 +14,7 @@ public class PacManLife : MonoBehaviour {
     public int numBlinks;
     public Renderer pacRenderer;
 
-    private bool isInvincible = false;
+    public bool isInvincible = false;
 
 	public Animator anim;
 	public PlayerController controller;

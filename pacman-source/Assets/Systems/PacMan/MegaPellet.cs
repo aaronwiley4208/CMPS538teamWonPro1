@@ -7,9 +7,12 @@ using UnityEngine;
 /// </summary>
 public class MegaPellet : MonoBehaviour {
 
+    private float size;
+
 	// Use this for initialization
 	void Start () {
         PacManSize.instance.AddMegapellet(this);
+        size = .4f;
         transform.localScale = new Vector3(.4f, .4f, .4f);
 	}
 	
@@ -18,8 +21,13 @@ public class MegaPellet : MonoBehaviour {
 		
 	}
 
-    public void SizeUp(float pacSize) {
+    public void PelletSizeUp(float pacSize) {
         float newSize = pacSize + .2f;
         transform.localScale = new Vector3(newSize, newSize, newSize);
+    }
+
+    // Call when this pellet is chomped. Sizes up pacman by my size
+    public void GetChomped() {
+        PacManSize.instance.Chomp(size);
     }
 }
