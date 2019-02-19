@@ -43,8 +43,8 @@ public class PlayerController : MonoBehaviour
 		capsuleCollider.enabled = false;
 		sphereCollider.enabled = true;
 
-		suctionCollider.enabled = false;
-		suctionCollider.isTrigger = true;
+		//suctionCollider.enabled = false;
+		//suctionCollider.isTrigger = true;
 
 		wings.SetActive (false);
 		slurpAnim = gameObject.GetComponent<Animator>();
@@ -335,7 +335,7 @@ public class PlayerController : MonoBehaviour
                 StartCoroutine("DoMegaChompAnimation");
             }
             megaChomp = value;
-            suctionCollider.enabled = value;
+            //suctionCollider.enabled = value;
         }
     }
 

@@ -8,4 +8,25 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
+  - enabled: 1
+    path: Assets/Caleb Scenes/Start Menu.unity
+    guid: bb1340487e122784a89280b9e91b0fb1
+  - enabled: 1
+    path: Assets/Caleb Scenes/Help Scene.unity
+    guid: 4c9373aac52f6fe4189a86259e491703
+  - enabled: 1
+    path: Assets/Caleb Scenes/Credits Scene.unity
+    guid: 49dc24f00ee045d479124057798a8d82
+  - enabled: 1
+    path: Assets/Caleb Scenes/Nick.unity
+    guid: 425d69124f7f53142b0a74b9d00e893d
+  - enabled: 1
+    path: Assets/Caleb Scenes/Win Screen.unity
+    guid: 2c5c827feac8d1144b541697b4ad478f
+  - enabled: 1
+    path: Assets/Caleb Scenes/Game Over Scene.unity
+    guid: 8dc701458466cc4459fb6d4ae8c66ab4
+  - enabled: 1
+    path: Assets/Caleb Scenes/Results Scene.unity
+    guid: 0c17d1960cf29064ca0b1b8a61c006b8
   m_configObjects: {}
