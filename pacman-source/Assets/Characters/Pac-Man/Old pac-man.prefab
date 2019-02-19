@@ -1445,8 +1445,8 @@ MonoBehaviour:
   pacBod: {fileID: 1000013380320860}
   wings: {fileID: 1356916728331818}
   sizeScript: {fileID: 114104202481436044}
-  moveForceFactor: 8
-  jumpForceFactor: 1000
+  moveForceFactor: 5
+  jumpForceFactor: 800
   isGrounded: 1
   jumpRate: 0.3
   jumps: 0
@@ -1492,11 +1492,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentSize: 0.5
   pelletsTilSizeUp: 0.8
+  sizeLostOnChomp: 1
   sizeUpProgBar: {fileID: 0}
   sizeUpProgBarBack: {fileID: 0}
   sizeUpSlider: {fileID: 0}
   scoreText: {fileID: 0}
   isSmall: 1
+  level: 0
+  megapellets: []
 --- !u!114 &114486929230507952
 MonoBehaviour:
   m_ObjectHideFlags: 1
