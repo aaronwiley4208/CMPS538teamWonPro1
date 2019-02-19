@@ -173,7 +173,7 @@ public class EnemyPatrolBehavior : MonoBehaviour {
 
     #region STATE_TRANSITIONS
     // Transition out of one state and into another
-    private void Transition(PatrolState transOut, PatrolState transIn) {
+    public void Transition(PatrolState transOut, PatrolState transIn) {
         patrolTransitionsOut[transOut]();
         currentState = transIn;
         patrolTransitionsIn[transIn]();

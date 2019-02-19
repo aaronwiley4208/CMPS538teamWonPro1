@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
 	public GameObject slideBall;
 	public GameObject pacBod;
 	public GameObject wings;
+	public PacManSize sizeScript;
 
     // Use this to initialize component references
     void Awake()
@@ -37,15 +38,20 @@ public class PlayerController : MonoBehaviour
         // Capture non-sliding capsule parameters
         capsuleStartHeight = capsuleCollider.height;
         capsuleStartCenter = capsuleCollider.center;
-		slideBall.SetActive (false);
-		pacBod.SetActive (true);
-		capsuleCollider.enabled = true;
+		slideBall.SetActive (true);
+		pacBod.SetActive (false);
+		capsuleCollider.enabled = false;
+		sphereCollider.enabled = true;
+
 		suctionCollider.enabled = false;
 		suctionCollider.isTrigger = true;
 
-		sphereCollider.enabled = false;
 		wings.SetActive (false);
 		slurpAnim = gameObject.GetComponent<Animator>();
+
+		sizeScript = GetComponent<PacManSize>();
+
+
     }
 
     // Frequently used input variables
@@ -54,11 +60,6 @@ public class PlayerController : MonoBehaviour
     Vector3 cameraForward;
     Vector3 rotateVector;
     float turnAngle;
-
-   
-
-
-
 
     // Base movement factor, unaffected by "energy"
     [SerializeField] float moveForceFactor = 5;
@@ -72,6 +73,7 @@ public class PlayerController : MonoBehaviour
 	float jumpTimer = 0;
 	[SerializeField]int jumps;
 	[SerializeField]int maxJumps = 5;
+	int jumpLevel = 0;
 
     //  Stomping state to prevent actions while stomping and detect stomp landings
     bool willStomp;
@@ -95,6 +97,9 @@ public class PlayerController : MonoBehaviour
     Vector3 capsuleStartCenter;
     Vector3 capsuleSlideCenter = new Vector3(0, 0.5f, 0);
 
+	bool hasGrown = false;
+
+
     // Movement multiplier for player energy to affect
     [HideInInspector] public float movementMultiplier = 1;
 
@@ -103,17 +108,29 @@ public class PlayerController : MonoBehaviour
     {
 		//faux gravity
 		rigidbody.AddForce(Vector3.down * 1750, ForceMode.Force);
-		
+
+		if(!sizeScript.isSmall){
+			//turns on pacman body if you size up
+			if(!hasGrown){
+				slideBall.SetActive (false);
+				pacBod.SetActive (true);
+				capsuleCollider.enabled = true;
+				sphereCollider.enabled = false;
+				hasGrown = true;
+			}
+
+		}
+
+
         if (!isAlive)
             return;
 
 		if (Input.GetKeyDown(KeyCode.E) && !isSliding)
 		{
-			slurpAnim.SetTrigger("Active");
+            // Remove Size from pac and make sure we can chomp
+            if (sizeScript.MegaChomp())
+			    slurpAnim.SetTrigger("Active");
 		}
-
-        //To allow isBool to be called properly into EnergyManager
-        
 		
 
         // Get desired movement from input axes to camera-relative world space on the XZ plane
@@ -169,10 +186,12 @@ public class PlayerController : MonoBehaviour
         //CheckGroundStatus();
 		checkforGround();
 
+
+
         // Apply movement only if not stomping (stomping halts XZ movement) or sliding
         Debug.DrawRay(transform.position, currentSteepSlope * 4, Color.red);
         if (!isStomping && !isSliding)
-            rigidbody.AddForce(moveVector * moveForceFactor * movementMultiplier + Vector3.ProjectOnPlane(currentSteepSlope, Vector3.up) * Vector3.ProjectOnPlane(currentSteepSlope, Vector3.up).magnitude * steepnessSlowMultiplier - Vector3.ProjectOnPlane(rigidbody.velocity, Vector3.up), ForceMode.VelocityChange);
+			rigidbody.AddForce(moveVector * (1 + 0.2f * sizeScript.level) * moveForceFactor * movementMultiplier + Vector3.ProjectOnPlane(currentSteepSlope, Vector3.up) * Vector3.ProjectOnPlane(currentSteepSlope, Vector3.up).magnitude * steepnessSlowMultiplier - Vector3.ProjectOnPlane(rigidbody.velocity, Vector3.up), ForceMode.VelocityChange);
 
         if (isSliding)
             //If sliding, turn in direction of velocity
@@ -192,13 +211,15 @@ public class PlayerController : MonoBehaviour
             willJump = false;
             // You can only jump if grounded, not stomping, and not bouncing
             // TODO Maybe allow jumping in place of bouncing when a stomp lands, not eating the jump if bouncing, allowing the player to set up a bounce-jump while still falling
-			if ((isGrounded || jumps > 0)  && !isSliding && !isStomping && !isBouncing && jumpTimer < Time.time)
+			if ((isGrounded || jumps > 1) && sizeScript.level > 0 && !isSliding && !isStomping && !isBouncing && jumpTimer < Time.time)
             {
 				jumps -= 1;
                 animator.SetTrigger("Jump");
-				rigidbody.AddForce(Vector3.up * jumpForceFactor, ForceMode.Impulse);
-				if(jumps < maxJumps-1)
+				rigidbody.AddForce(Vector3.up * jumpForceFactor * (1 + 0.2f * sizeScript.level), ForceMode.Impulse);
+				if (jumps < sizeScript.level-1) {
 					wings.SetActive (true);
+					print ("ggs");
+				}
 				isSliding = false;
 				slideBall.SetActive (false);
 				pacBod.SetActive (true);
@@ -209,20 +230,6 @@ public class PlayerController : MonoBehaviour
         }
 
 
-
-        // Stomping
-        if (willStomp)
-        {
-            willStomp = false;
-            // You can only stomp if you're in the air, not already stomping, and not bouncing from a previous stomp
-            if (!isGrounded && !isStomping && !isBouncing)
-            {
-                isStomping = true;
-                animator.SetBool("Stomping", true);
-                //rigidBody.AddForce (Vector3.down * stompForceFactor, ForceMode.VelocityChange);
-                rigidbody.velocity = Vector3.down * stompForceFactor;
-            }
-        }
 
         // Sliding
 		if (isSliding)
@@ -251,7 +258,7 @@ public class PlayerController : MonoBehaviour
         {
             // Do you want to start sliding?
             // You can only slide if the player is grounded and moving fast enough
-			if (willSlide && Vector3.ProjectOnPlane(rigidbody.velocity, Vector3.up).magnitude > SLIDING_MIN_VELOCITY && !(slurpAnim.GetCurrentAnimatorStateInfo(0).IsName("Slurp")))
+			if (willSlide && !sizeScript.isSmall && Vector3.ProjectOnPlane(rigidbody.velocity, Vector3.up).magnitude > SLIDING_MIN_VELOCITY && !(slurpAnim.GetCurrentAnimatorStateInfo(0).IsName("Slurp")))
             {
                 // Start sliding
                 isSliding = true;
@@ -284,7 +291,7 @@ public class PlayerController : MonoBehaviour
 
 		if (Physics.Raycast (transform.position, Vector3.down, capsuleCollider.bounds.extents.y + 0.01f) || Physics.Raycast (transform.position, Vector3.down, sphereCollider.bounds.extents.y + 0.01f)) {
 			isGrounded = true;
-			jumps = maxJumps;
+			jumps = sizeScript.level;
 			wings.SetActive (false);
 		} else {
 			isGrounded = false;

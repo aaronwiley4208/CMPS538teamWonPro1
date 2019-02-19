@@ -13,6 +13,8 @@ public class PacManSize : MonoBehaviour {
     public float currentSize;
     [Tooltip("What size total of pellets he should consume til next sizeup")]
     public float pelletsTilSizeUp;
+    [Tooltip("Size Lost On Chomp")]
+    public float sizeLostOnChomp;
 
     [Header("UI Fields")]
     public Image sizeUpProgBar;
@@ -24,7 +26,10 @@ public class PacManSize : MonoBehaviour {
     private float totalConsumedPelletSize = 0;
     public static PacManSize instance;
 
+	public bool isSmall = true;
+	public int level = 0;
 
+    public List<MegaPellet> megapellets;
 
 	// Use this for initialization
 	void Awake () {
@@ -63,6 +68,23 @@ public class PacManSize : MonoBehaviour {
         pelletsTilSizeUp += 1;
         currentConsumedPelletSize = 0;
 		GetComponent<PacManLife> ().HPUp (2);
+		isSmall = false;
+		level++;
+
+        // Also increase size of MegaPellets
+        foreach (var mp in megapellets)
+            mp.PelletSizeUp(currentSize);
+    }
+    
+    public bool MegaChomp() {
+        if (currentConsumedPelletSize == 0)
+            return false;
+        else {
+            currentConsumedPelletSize -= sizeLostOnChomp;
+            if (currentConsumedPelletSize < 0) currentConsumedPelletSize = 0;
+            UpdateUI();
+            return true;
+        }
     }
 
     // Fill progress bars and say things like +size and stuff.
@@ -76,5 +98,12 @@ public class PacManSize : MonoBehaviour {
 
 
         //scoreText.text = "Total Size: " + totalConsumedPelletSize + "m";
+    }
+
+    public void AddMegapellet(MegaPellet mp) {
+        megapellets.Add(mp);
+    }
+    public void RemoveMegapellet(MegaPellet mp) {
+        megapellets.Remove(mp);
     }
 }
